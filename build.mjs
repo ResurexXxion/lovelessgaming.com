@@ -226,6 +226,13 @@ ${s.added?.length ? `<section class="wrap section">
     ${s.added.map((g) => `<div class="card"><div class="card-body"><h3>${esc(g.group)}</h3><ul class="modlist">${g.items.map((i) => `<li><strong>${extLink(i.name, i.url)}</strong><span>${esc(i.why)}</span></li>`).join('')}</ul></div></div>`).join('\n    ')}
   </div>
 </section>` : ''}
+${s.adult?.items?.length ? `<section class="wrap section">
+  <details class="adult">
+    <summary><span class="badge-18">18+</span> Adult mods in this setup <span class="meta">(hidden; click to show)</span></summary>
+    <p class="meta">${esc(s.adult.note)}</p>
+    <ul class="modlist wide">${s.adult.items.map((a) => `<li><strong>${esc(a.name)} <span class="by">by ${esc(a.author)}</span></strong><span>${esc(a.why)}</span></li>`).join('')}</ul>
+  </details>
+</section>` : ''}
 ${s.removed?.length ? `<section class="wrap section">
   <h2>What I removed, and why</h2>
   <ul class="modlist wide">${s.removed.map((r) => `<li><strong>${esc(r.name)}</strong><span>${esc(r.why)}</span></li>`).join('')}</ul>

@@ -212,6 +212,12 @@ a.tile-link:hover { color: var(--text); transform: translateY(-2px); border-colo
 .modlist.wide { gap: 14px; max-width: 80ch; }
 .modlist.wide li { padding-left: 14px; border-left: 3px solid var(--line); }
 
+.modlist .by { font-weight: 500; color: var(--muted); font-size: 0.85em; }
+details.adult { background: var(--bg-raised); border: 1px dashed var(--line); border-radius: var(--radius); padding: 14px 18px; }
+details.adult summary { cursor: pointer; font-weight: 700; list-style-position: inside; }
+details.adult[open] summary { margin-bottom: 10px; }
+.badge-18 { display: inline-block; font-size: 0.75rem; font-weight: 800; padding: 2px 8px; border-radius: 6px; background: #b3261e; color: #fff; margin-right: 6px; letter-spacing: 0.04em; }
+
 /* tick lists (SolClient page) */
 .ticks { list-style: none; padding: 0; margin: 0 0 8px; display: grid; gap: 8px; }
 .ticks li { position: relative; padding-left: 24px; color: var(--muted); }

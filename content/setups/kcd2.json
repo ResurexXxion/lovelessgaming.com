@@ -42,7 +42,7 @@
           "why": "Pairs with Galahad so the longer road doesn't drag."
         },
         {
-          "name": "Luck Laid Bare",
+          "name": "Luck Laid Bare - Dice Unveiled",
           "url": "https://www.nexusmods.com/kingdomcomedeliverance2/mods/492",
           "why": "Shows the real odds in dice."
         }
@@ -60,8 +60,28 @@
           "why": "A war dog companion."
         },
         {
+          "name": "Dorota - A Voiced Companion",
+          "url": "https://www.nexusmods.com/kingdomcomedeliverance2/mods/3755",
+          "why": "A fully voiced companion. Keys [ wait/follow and ] come here."
+        },
+        {
           "name": "KCD2 Companion (trainer)",
           "why": "In-game helper window with go-to-objective. Installed by hand, not through Vortex (see the fixes below)."
+        }
+      ]
+    },
+    {
+      "group": "Quests and story",
+      "items": [
+        {
+          "name": "Letters From Theresa (Quest)",
+          "url": "https://www.nexusmods.com/kingdomcomedeliverance2/mods/2932",
+          "why": "A letter quest through the scribes in Kuttenberg and Troskowitz, after Wedding Crashers."
+        },
+        {
+          "name": "The Fall of House Ryzmburk",
+          "url": "https://www.nexusmods.com/kingdomcomedeliverance2/mods/3816",
+          "why": "Lore books, a diary and containers telling the Ryzmburk story."
         }
       ]
     },
@@ -69,12 +89,12 @@
       "group": "World and home",
       "items": [
         {
-          "name": "Kobyla Castle (Pschitoky)",
+          "name": "Kobyla Castle - Pschitoky Expansion",
           "url": "https://www.nexusmods.com/kingdomcomedeliverance2/mods/2220",
-          "why": "Rebuilds the castle: palisade, forge, chapel, baths and more. Not compatible with other Kuttenberg-map mods, so pick one."
+          "why": "Rebuilds the castle: palisade, forge, chapel, baths, guards and more. Not compatible with other Kuttenberg-map mods, so pick one."
         },
         {
-          "name": "Smuggler player home",
+          "name": "Player Home and Smuggler Hideout",
           "url": "https://www.nexusmods.com/kingdomcomedeliverance2/mods/2966",
           "why": "A player home. It edits the Trosky level, so uninstalling mid-save can break saves."
         }
@@ -83,6 +103,16 @@
     {
       "group": "Gear",
       "items": [
+        {
+          "name": "The Raven and the Rose Armoury",
+          "url": "https://www.nexusmods.com/kingdomcomedeliverance2/mods/3308",
+          "why": "An armour set sold in shops."
+        },
+        {
+          "name": "House of Kobyla Arms Armour and Regalia",
+          "url": "https://www.nexusmods.com/kingdomcomedeliverance2/mods/1027",
+          "why": "Kobyla heraldry and tabards; pairs with the Kobyla Castle expansion."
+        },
         {
           "name": "Knights of Bohemia",
           "why": "Big armor pack (the largest add by size)."
@@ -133,6 +163,11 @@
         {
           "name": "MCM + Mod Config Import Export",
           "why": "In-game settings menus for mods that support them."
+        },
+        {
+          "name": "Noclip aka Fly Nocollision",
+          "url": "https://www.nexusmods.com/kingdomcomedeliverance2/mods/3838",
+          "why": "Fly through walls to get unstuck or explore. Default key End, rebindable."
         }
       ]
     },
@@ -225,5 +260,29 @@
     "url": "https://github.com/ResurexXxion/loveless-mod-consoles/tree/main/kcd2",
     "why": "Every finding on this page came from reading the game's logs. The console does that live while you play."
   },
-  "omitted": "A few adult mods in my personal list aren't shown here."
+  "adult": {
+    "note": "These mods contain nudity or adult themes. Three come with Hussitesque itself; I added WetSlipBathmaids. Nexus hides adult mods unless you're logged in with adult content turned on.",
+    "items": [
+      {
+        "name": "xnude",
+        "author": "beethy",
+        "why": "Nudity mod."
+      },
+      {
+        "name": "Enhanced Adult Bounce",
+        "author": "DreamMora",
+        "why": "Body physics."
+      },
+      {
+        "name": "DDV underwear fixes (bath and female)",
+        "author": "DDVaMpZzz",
+        "why": "Underwear and clothing fixes for the bathhouse and female characters."
+      },
+      {
+        "name": "WetSlipBathmaids",
+        "author": "M461573R",
+        "why": "Changes the bathhouse maids' outfits. My addition."
+      }
+    ]
+  }
 }
