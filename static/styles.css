@@ -78,13 +78,35 @@ h3 { font-size: 1.15rem; font-weight: 700; }
 .site-nav a[aria-current="page"] { color: var(--text); background: var(--bg-raised); box-shadow: inset 0 -2px 0 var(--accent); }
 
 /* hero */
+/* The hero art (img/hero.jpg, built by work/hero/make-hero.mjs) is always dark, so the hero keeps
+   dark-mode colors even when the rest of the page is in light mode. */
 .hero {
-  padding: clamp(56px, 10vw, 120px) 0 clamp(40px, 7vw, 80px);
+  --text: #e9e7e2; --muted: #c4c5ce; --line: #3a3f4d; --bg-raised: #16181f;
+  --accent: #ff5b3a; --accent-2: #ffb347; --accent-ink: #160a06;
+  color-scheme: dark;
+  color: var(--text);
+  display: flex;
+  align-items: center;
+  min-height: clamp(420px, 46vw, 620px);
+  padding: 56px 0;
   background:
-    radial-gradient(900px 400px at 15% -10%, color-mix(in srgb, var(--accent) 22%, transparent), transparent 70%),
-    radial-gradient(700px 360px at 95% 10%, color-mix(in srgb, var(--accent-2) 14%, transparent), transparent 70%);
+    linear-gradient(90deg, rgba(10, 11, 14, 0.94) 0%, rgba(10, 11, 14, 0.7) 40%, rgba(10, 11, 14, 0) 64%),
+    url("img/hero.jpg") right center / cover no-repeat,
+    #0a0b0e;
   border-bottom: 1px solid var(--line);
   margin-bottom: 40px;
+}
+.hero .wrap { width: 100%; }
+/* Below ~1240px the title would run into the heart, so the art becomes a dimmed backdrop. */
+@media (max-width: 1240px) {
+  .hero {
+    min-height: 0;
+    padding: clamp(64px, 10vw, 96px) 0 clamp(56px, 8vw, 88px);
+    background:
+      linear-gradient(180deg, rgba(10, 11, 14, 0.62), rgba(10, 11, 14, 0.82)),
+      url("img/hero.jpg") 80% center / cover no-repeat,
+      #0a0b0e;
+  }
 }
 .hero h1 {
   background: linear-gradient(90deg, var(--text) 0%, var(--text) 45%, var(--accent-2) 75%, var(--accent) 100%);
