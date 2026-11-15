@@ -4,7 +4,7 @@
 //   SKIP_FEEDS=1 node build.mjs build without going online
 //   BASE_PATH=/repo node build.mjs   build for https://user.github.io/repo/ (the workflow sets this)
 
-import { readFile, writeFile, mkdir, rm, cp } from 'node:fs/promises';
+import { readFile, writeFile, mkdir, rm, cp, readdir } from 'node:fs/promises';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 
@@ -16,6 +16,13 @@ const config = await readJSON('site.config.json');
 const { releases = [], games = [] } = await readJSON('content/mods.json');
 const { books = [] } = await readJSON('content/books.json');
 const sol = await readJSON('content/solclient.json');
+// One JSON file per game setup in content/setups/, each becoming /mods/<slug>/.
+const setups = await Promise.all(
+  (await readdir(path.join(root, 'content/setups')).catch(() => []))
+    .filter((f) => f.endsWith('.json'))
+    .sort()
+    .map((f) => readJSON(`content/setups/${f}`))
+);
 const discordUrl = ((config.links || []).find((l) => /discord/i.test(l.label)) || {}).url || '';
 const base = (process.env.BASE_PATH || '').replace(/\/$/, '');
 const year = new Date().getFullYear();
@@ -109,7 +116,7 @@ function page({ slug, title, description, body }) {
   const fullTitle = slug === '/' ? `${config.siteName}: ${config.tagline}` : `${title} · ${config.siteName}`;
   const canonical = `https://${config.domain}${slug}`;
   const navHtml = nav
-    .map(([p, label]) => `<a href="${href(p)}"${p === slug ? ' aria-current="page"' : ''}>${label}</a>`)
+    .map(([p, label]) => `<a href="${href(p)}"${slug.startsWith(p) ? ' aria-current="page"' : ''}>${label}</a>`)
     .join('');
   return `<!doctype html>
 <html lang="en">
@@ -177,6 +184,65 @@ function modCard(m) {
     <div class="actions">${linkList(m.links)}</div>
   </div>
 </article>`;
+}
+
+function setupCard(s) {
+  return `<a class="card tile-link" href="${href(`/mods/${s.slug}/`)}">
+  <div class="card-body">
+    <p class="eyebrow">${esc(s.game)}</p>
+    <h3>${esc(s.title)}</h3>
+    <p>${esc(s.summary)}</p>
+    ${s.updated ? `<p class="meta">Updated ${esc(fmtDate(s.updated))}</p>` : ''}
+  </div>
+</a>`;
+}
+
+const extLink = (name, url) => (url ? `<a href="${esc(url)}" rel="noopener">${esc(name)}</a>` : esc(name));
+
+function setupPage(s) {
+  return page({
+    slug: `/mods/${s.slug}/`,
+    title: `${s.title}: ${s.game}`,
+    description: s.summary,
+    body: `<section class="page-head wrap">
+  <p class="kicker"><a href="${href('/mods/')}">Mods</a> · ${esc(s.game)}</p>
+  <h1>${esc(s.title)}</h1>
+  <p class="lede">${esc(s.summary)}</p>
+  ${s.facts?.length ? `<dl class="facts">${s.facts.map(([k, v]) => `<div><dt>${esc(k)}</dt><dd>${esc(v)}</dd></div>`).join('')}</dl>` : ''}
+</section>
+${s.base ? `<section class="wrap section">
+  <div class="feature static">
+    <div>
+      <p class="eyebrow">Built on</p>
+      <h2>${esc(s.base.name)} <span class="by">by ${esc(s.base.author)}</span></h2>
+      <p>${esc(s.base.note)}</p>
+    </div>
+    <a class="btn" href="${esc(s.base.url)}" rel="noopener">Get ${esc(s.base.name)} on Nexus</a>
+  </div>
+</section>` : ''}
+${s.added?.length ? `<section class="wrap section">
+  <h2>What I added</h2>
+  <div class="grid three">
+    ${s.added.map((g) => `<div class="card"><div class="card-body"><h3>${esc(g.group)}</h3><ul class="modlist">${g.items.map((i) => `<li><strong>${extLink(i.name, i.url)}</strong><span>${esc(i.why)}</span></li>`).join('')}</ul></div></div>`).join('\n    ')}
+  </div>
+</section>` : ''}
+${s.removed?.length ? `<section class="wrap section">
+  <h2>What I removed, and why</h2>
+  <ul class="modlist wide">${s.removed.map((r) => `<li><strong>${esc(r.name)}</strong><span>${esc(r.why)}</span></li>`).join('')}</ul>
+</section>` : ''}
+${s.lessons?.length ? `<section class="wrap section">
+  <h2>Fixes and lessons</h2>
+  <div class="grid three">
+    ${s.lessons.map((l) => `<div class="card"><div class="card-body"><h3>${esc(l.title)}</h3><p>${esc(l.text)}</p></div></div>`).join('\n    ')}
+  </div>
+</section>` : ''}
+<section class="wrap section prose">
+  ${s.status ? `<h2>Status</h2><p>${esc(s.status)}</p>` : ''}
+  ${s.tool ? `<h2>The tool behind it</h2><p>${esc(s.tool.why)} <a href="${esc(s.tool.url)}" rel="noopener">Get ${esc(s.tool.name)} →</a></p>` : ''}
+  ${s.omitted ? `<p class="meta">${esc(s.omitted)}</p>` : ''}
+  <p class="meta">Questions about this setup? Ask in the ${discordUrl ? `<a href="${esc(discordUrl)}" rel="noopener">Discord</a>` : 'Discord'}.</p>
+</section>`,
+  });
 }
 
 function bookCard(b) {
@@ -285,6 +351,11 @@ const modsPage = page({
   ${releases.length ? `<div class="grid three">${releases.map(modCard).join('')}</div>` : empty('First releases coming soon.')}
   <p class="meta">Playing Furcadia? See <a href="${href('/solclient/')}">SolClient</a>, my add-on for the Furcadia client.</p>
 </section>
+${setups.length ? `<section class="wrap section">
+  <h2>My setups</h2>
+  <p class="meta">Full modded setups I play, with credit to the collections they're built on, what I changed, and the fixes it took.</p>
+  <div class="grid three">${setups.map(setupCard).join('')}</div>
+</section>` : ''}
 ${games.length ? `<section class="wrap section">
   <h2>Games I mod</h2>
   <ul class="chips">${games.map((g) => `<li>${esc(g)}</li>`).join('')}</ul>
@@ -387,12 +458,13 @@ await rm(out, { recursive: true, force: true });
 await cp(path.join(root, 'static'), out, { recursive: true, filter: (src) => path.basename(src) !== 'README.md' });
 
 const pages = { 'index.html': home, 'mods/index.html': modsPage, 'solclient/index.html': solPage, 'books/index.html': booksPage, 'writing/index.html': writingPage, 'links/index.html': linksPage, 'about/index.html': aboutPage, '404.html': notFound };
+for (const s of setups) pages[`mods/${s.slug}/index.html`] = setupPage(s);
 for (const [file, html] of Object.entries(pages)) {
   await mkdir(path.dirname(path.join(out, file)), { recursive: true });
   await writeFile(path.join(out, file), html);
 }
 
-const urls = ['/', '/mods/', '/solclient/', '/books/', '/writing/', '/links/', '/about/'];
+const urls = ['/', '/mods/', ...setups.map((s) => `/mods/${s.slug}/`), '/solclient/', '/books/', '/writing/', '/links/', '/about/'];
 await writeFile(
   path.join(out, 'sitemap.xml'),
   `<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n${urls.map((u) => `  <url><loc>https://${config.domain}${u}</loc></url>`).join('\n')}\n</urlset>\n`

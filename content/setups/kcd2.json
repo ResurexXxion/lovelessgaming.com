@@ -1,0 +1,229 @@
+{
+  "slug": "kcd2",
+  "game": "Kingdom Come: Deliverance II",
+  "title": "My KCD2 setup",
+  "summary": "About 130 mods on top of Opetank's Hussitesque collection: deeper progression, companions, a rebuilt Kobyla, more gear, a minimap, and the fixes it took to make it all load together.",
+  "updated": "2026-10-26",
+  "facts": [
+    [
+      "Game",
+      "1.5.6 (Steam)"
+    ],
+    [
+      "Mods enabled",
+      "130"
+    ],
+    [
+      "Manager",
+      "Vortex, plus KCSE (script extender)"
+    ],
+    [
+      "Base",
+      "Hussitesque collection by Opetank"
+    ]
+  ],
+  "base": {
+    "name": "Hussitesque",
+    "author": "Opetank",
+    "url": "https://www.nexusmods.com/games/kingdomcomedeliverance2/collections/wf3u3d",
+    "note": "Start here. Hussitesque is a big all-in-one collection (visuals, gameplay, items, fixes) and installs with one click in Vortex. Everything below is what I changed on top of it."
+  },
+  "added": [
+    {
+      "group": "Progression",
+      "items": [
+        {
+          "name": "Galahad - The Long Road to Knighthood",
+          "url": "https://www.nexusmods.com/kingdomcomedeliverance2/mods/3814",
+          "why": "Replaces Enhanced Perks: 221 perks, caps raised to 50, skill books, deadlier early game. Safe to add mid-game, not to remove."
+        },
+        {
+          "name": "FastPerkProgress",
+          "why": "Pairs with Galahad so the longer road doesn't drag."
+        },
+        {
+          "name": "Luck Laid Bare",
+          "url": "https://www.nexusmods.com/kingdomcomedeliverance2/mods/492",
+          "why": "Shows the real odds in dice."
+        }
+      ]
+    },
+    {
+      "group": "Companions",
+      "items": [
+        {
+          "name": "Theresa Settle and Companion",
+          "why": "Theresa as a companion, with her own AI and quests."
+        },
+        {
+          "name": "Canine Companion",
+          "why": "A war dog companion."
+        },
+        {
+          "name": "KCD2 Companion (trainer)",
+          "why": "In-game helper window with go-to-objective. Installed by hand, not through Vortex (see the fixes below)."
+        }
+      ]
+    },
+    {
+      "group": "World and home",
+      "items": [
+        {
+          "name": "Kobyla Castle (Pschitoky)",
+          "url": "https://www.nexusmods.com/kingdomcomedeliverance2/mods/2220",
+          "why": "Rebuilds the castle: palisade, forge, chapel, baths and more. Not compatible with other Kuttenberg-map mods, so pick one."
+        },
+        {
+          "name": "Smuggler player home",
+          "url": "https://www.nexusmods.com/kingdomcomedeliverance2/mods/2966",
+          "why": "A player home. It edits the Trosky level, so uninstalling mid-save can break saves."
+        }
+      ]
+    },
+    {
+      "group": "Gear",
+      "items": [
+        {
+          "name": "Knights of Bohemia",
+          "why": "Big armor pack (the largest add by size)."
+        },
+        {
+          "name": "Silver Lys Gear",
+          "why": "A full gear set with its own shop. Must load before its tier file."
+        },
+        {
+          "name": "Legendary Swords",
+          "why": "Unique swords with recipes and a perk."
+        },
+        {
+          "name": "Horse Armour",
+          "why": "Armor for your horse."
+        },
+        {
+          "name": "Reforge Everything",
+          "url": "https://www.nexusmods.com/kingdomcomedeliverance2/mods/2884",
+          "why": "Reforge most gear to top quality at a smithy."
+        }
+      ]
+    },
+    {
+      "group": "Interface and quality of life",
+      "items": [
+        {
+          "name": "KCD2 Minimap (GPS)",
+          "why": "A GPS-style minimap."
+        },
+        {
+          "name": "Timed Quest Markers",
+          "url": "https://www.nexusmods.com/kingdomcomedeliverance2/mods/1579",
+          "why": "Quest marker and quest log improvements."
+        },
+        {
+          "name": "Readable Inventory",
+          "why": "A clearer inventory screen."
+        },
+        {
+          "name": "XP Monitor",
+          "why": "Shows XP gains."
+        },
+        {
+          "name": "Arrow Arc",
+          "why": "Optional arrow trajectory line (console commands)."
+        },
+        {
+          "name": "MCM + Mod Config Import Export",
+          "why": "In-game settings menus for mods that support them."
+        }
+      ]
+    },
+    {
+      "group": "Technical",
+      "items": [
+        {
+          "name": "Mod Limit Fix",
+          "url": "https://www.nexusmods.com/kingdomcomedeliverance2/mods/3427",
+          "why": "Required once you pass roughly 120 to 130 mod folders; without it the game crashes at launch."
+        },
+        {
+          "name": "KCSE + Address Library",
+          "why": "Script extender and its address library, needed by several mods here."
+        }
+      ]
+    }
+  ],
+  "removed": [
+    {
+      "name": "Enhanced Perks",
+      "why": "Replaced by Galahad."
+    },
+    {
+      "name": "Dynamic Fog / TimeOfDay (weather and lighting)",
+      "why": "Caused constant shader-error spam in the console when the game runs with -devmode."
+    },
+    {
+      "name": "Dynamic Detector + Gear Switcher",
+      "why": "Suspected in three inventory crashes in a row (their UI lines ended each log); removed as a precaution."
+    },
+    {
+      "name": "1st Person Herb Picking II, Faster Crossbow Reload, Faster Trough",
+      "why": "Clash with First Person Herb, which stays."
+    },
+    {
+      "name": "BookRework, InteractiveUIRework",
+      "why": "Checker's UI Rework already contains them, byte for byte."
+    },
+    {
+      "name": "Small config-only mods (darker shadows, interior light fog, async compute, horse handling and similar)",
+      "why": "Their settings were moved into user.cfg, which frees mod-folder slots."
+    },
+    {
+      "name": "KCD2 DualSense Overhaul",
+      "why": "No controller in use; its bridge was restarting every few seconds."
+    }
+  ],
+  "lessons": [
+    {
+      "title": "Over ~120 mods? Install Mod Limit Fix first",
+      "text": "The game crashes at launch somewhere around 120 to 130 mod folders. Mod Limit Fix (a KCSE plugin) removes the limit. Stay a little under 140 until you've tested more."
+    },
+    {
+      "title": "Version-disabled mods",
+      "text": "If a mod's manifest only lists an old game version (for example 1.1.*), the game silently turns it off. A wildcard like 1.*.* in the manifest makes it load. Check kcd.log for 'will be disabled'."
+    },
+    {
+      "title": "Mod IDs must be lowercase",
+      "text": "The manifest's modid only accepts lowercase letters and underscores (digits work but log a warning), and mod_order.txt entries are matched to that modid, not the folder name. A mixed-case entry shows up as 'not found'."
+    },
+    {
+      "title": "Keep KCSE's dinput8.dll",
+      "text": "KCSE's dinput8.dll is about 1.4 MB. A mod that extracts its own ASI-loader dinput8.dll (about 3.6 MB) silently replaces it and every KCSE plugin stops loading."
+    },
+    {
+      "title": "'Duplicated item id' warnings are usually harmless",
+      "text": "With the cheat mod installed, dozens of 'Skipping duplicated item id' and 'Failed to load XML database' lines come from the cheat mod's own search index, not from real conflicts."
+    },
+    {
+      "title": "Shader spam in the console",
+      "text": "If the console fills with total_illumination shader errors under -devmode, the weather/lighting mod (Dynamic Fog / TimeOfDay) was the cause here. Disabling it stopped the spam."
+    },
+    {
+      "title": "Some settings need -devmode",
+      "text": "Horse-handling settings are cheat-flagged in the engine, so a mod that sets them only works when the game is launched with -devmode."
+    },
+    {
+      "title": "When two mods ship the same file",
+      "text": "Later mods win whole files, so mods that both change keybinds or the same Lua file break each other. I fixed it with a private merge patch loaded last. It can't be shared because it contains other authors' files, but the method is: merge the conflicting files by hand and load the result after everything else."
+    },
+    {
+      "title": "Hand-installed mods and Vortex",
+      "text": "KCD2 Companion isn't managed by Vortex; Vortex rewrites mod_order.txt on every deploy and the Companion re-adds itself when the game starts. Re-check that dinput8.dll is still KCSE's after any Companion update, and note its achievement tab writes to Steam permanently."
+    }
+  ],
+  "status": "Stable for multi-hour sessions. Two unexplained crashes (2026-10-24 and 10-25; the second right after opening the inventory) are still being looked into with the KCD2 Console.",
+  "tool": {
+    "name": "KCD2 Console",
+    "url": "https://github.com/ResurexXxion/loveless-mod-consoles/tree/main/kcd2",
+    "why": "Every finding on this page came from reading the game's logs. The console does that live while you play."
+  },
+  "omitted": "A few adult mods in my personal list aren't shown here."
+}
