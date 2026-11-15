@@ -1,0 +1,27 @@
+{
+  "title": "SolClient preview screenshots",
+  "intro": "A first look at SolClient v0.10, the add-on for the official Furcadia client: the control panel, SolClient Studio and the new Map Editor. It's still in development; release news and test builds happen in the Discord.",
+  "dir": "/img/solclient/",
+  "og": "og.jpg",
+  "shots": [
+    { "file": "01-overview.png", "thumb": "01-overview-thumb.jpg", "title": "Overview", "caption": "Launch Furcadia as any of your characters, and see the connection, encryption, active modules and latest chat at a glance." },
+    { "file": "02-chat.png", "thumb": "02-chat-thumb.jpg", "title": "Chat", "caption": "A live, modern copy of your chat box: name colours, clickable links, and filters for speech, emotes, whispers and mentions." },
+    { "file": "03-whispers.png", "thumb": "03-whispers-thumb.jpg", "title": "Whispers", "caption": "One threaded conversation per person, saved per character." },
+    { "file": "04-dream-who-s-here.png", "thumb": "04-dream-who-s-here-thumb.jpg", "title": "Dream: who's here", "caption": "Who's in the dream with you and where they're standing, plus arrivals and departures, all from data the server already sends." },
+    { "file": "05-ds-monitor.png", "thumb": "05-ds-monitor-thumb.jpg", "title": "DS Monitor", "caption": "Live DragonSpeak variables and the most-fired DS lines, for testing your own dream." },
+    { "file": "06-modules.png", "thumb": "06-modules-thumb.jpg", "title": "Modules", "caption": "Every feature is a module you can switch on or off; changes apply right away." },
+    { "file": "07-friends.png", "thumb": "07-friends-thumb.jpg", "title": "Friends", "caption": "A friends-online tracker that checks one friend every 3 minutes, Furcadia's limit for add-ons." },
+    { "file": "08-backpack.png", "thumb": "08-backpack-thumb.jpg", "title": "Backpack", "caption": "A roleplay inventory per character. Others can whisper you @backpack to see it." },
+    { "file": "09-tools-macros-away-wardrobe.png", "thumb": "09-tools-macros-away-wardrobe-thumb.jpg", "title": "Tools: macros, away, wardrobe", "caption": "Multi-step macros, an away mode that answers each whisper once, and saved outfits." },
+    { "file": "10-alerts.png", "thumb": "10-alerts-thumb.jpg", "title": "Alerts", "caption": "Keyword sounds and taskbar flashes, a doorbell for whispers and summons, and a private ignore list." },
+    { "file": "11-logs.png", "thumb": "11-logs-thumb.jpg", "title": "Logs", "caption": "Search Furcadia's own chat logs for every character in one place." },
+    { "file": "12-console.png", "thumb": "12-console-thumb.jpg", "title": "Console", "caption": "What SolClient is doing, live, including the encrypted-connection check at login." },
+    { "file": "13-wire-log.png", "thumb": "13-wire-log-thumb.jpg", "title": "Wire log", "caption": "Every protocol line, labelled, for module writers. Login lines are never logged." },
+    { "file": "14-settings.png", "thumb": "14-settings-thumb.jpg", "title": "Settings", "caption": "Command prefix, plus the security settings: login protection and certificate pinning." },
+    { "file": "15-about.png", "thumb": "15-about-thumb.jpg", "title": "About", "caption": "The SolClient package: Control Panel, Studio, Map Editor, and a Patch Editor coming later." },
+    { "file": "16-studio-dragonspeak-editor.png", "thumb": "16-studio-dragonspeak-editor-thumb.jpg", "title": "Studio: DragonSpeak editor", "caption": "SolClient Studio: a DragonSpeak editor with a Blocks view, sections, templates, a DS reference and a problems checker." },
+    { "file": "17-map-editor-floors-and-picker.jpg", "thumb": "17-map-editor-floors-and-picker-thumb.jpg", "title": "Map Editor: floors and picker", "caption": "Your whole dream drawn with its real art, with a floor picker and paint tools. Edits go to a test copy." },
+    { "file": "18-map-editor-items.jpg", "thumb": "18-map-editor-items-thumb.jpg", "title": "Map Editor: items", "caption": "Painting items, with the dream's own patch art in the picker." },
+    { "file": "19-map-editor-select-copy-move.jpg", "thumb": "19-map-editor-select-copy-move-thumb.jpg", "title": "Map Editor: select, copy, move", "caption": "Select an area, then copy, cut, move or fill it." }
+  ]
+}

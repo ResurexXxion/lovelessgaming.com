@@ -16,6 +16,7 @@ const config = await readJSON('site.config.json');
 const { releases = [], games = [] } = await readJSON('content/mods.json');
 const { books = [] } = await readJSON('content/books.json');
 const sol = await readJSON('content/solclient.json');
+const solShots = await readJSON('content/solclient-screenshots.json');
 // One JSON file per game setup in content/setups/, each becoming /mods/<slug>/.
 const setups = await Promise.all(
   (await readdir(path.join(root, 'content/setups')).catch(() => []))
@@ -111,7 +112,7 @@ const nav = [
     ['My setups', setups.map((s) => [`/mods/${s.slug}/`, `${s.game}`])],
     ['Releases', releases.filter((r) => r.links?.[0]?.url).map((r) => [r.links[0].url, r.name])],
   ]],
-  ['/solclient/', 'SolClient', []],
+  ['/solclient/', 'SolClient', [['', [['/solclient/', 'About SolClient'], ['/solclient/screenshots/', `Screenshots (${solShots.shots.length})`]]]]],
   ['/books/', 'Books', [['', books.filter((b) => b.links?.[0]?.url).slice(0, 6).map((b) => [b.links[0].url, b.title])]]],
   ['/writing/', 'Writing', [['Latest', medium.items.slice(0, 5).map((a) => [a.link, a.title])]]],
   ['/links/', 'Links', []],
@@ -138,7 +139,7 @@ function navTree(slug) {
     .join('')}</ul>`;
 }
 
-function page({ slug, title, description, body }) {
+function page({ slug, title, description, body, ogImage, ogAlt, script = '' }) {
   const fullTitle = slug === '/' ? `${config.siteName}: ${config.tagline}` : `${title} · ${config.siteName}`;
   const canonical = `https://${config.domain}${slug}`;
   const navHtml = navTree(slug);
@@ -156,10 +157,10 @@ function page({ slug, title, description, body }) {
 <meta property="og:description" content="${esc(description || config.description)}">
 <meta property="og:url" content="${esc(canonical)}">
 <meta name="theme-color" content="#0e0f13">
-<meta property="og:image" content="https://${esc(config.domain)}/og-image.jpg">
+<meta property="og:image" content="https://${esc(config.domain)}${esc(ogImage || '/og-image.jpg')}">
 <meta property="og:image:width" content="1200">
 <meta property="og:image:height" content="630">
-<meta property="og:image:alt" content="The Loveless Gaming logo, a cracked heart-shaped game controller, glowing over drifting embers">
+<meta property="og:image:alt" content="${esc(ogAlt || 'The Loveless Gaming logo, a cracked heart-shaped game controller, glowing over drifting embers')}">
 <meta name="twitter:card" content="summary_large_image">
 <link rel="icon" href="${href('/favicon.svg')}" type="image/svg+xml">
 <link rel="apple-touch-icon" href="${href('/apple-touch-icon.png')}">
@@ -188,6 +189,7 @@ ${body}
       .join('')}${config.contactEmail ? `<a href="mailto:${esc(config.contactEmail)}">Contact</a>` : ''}</span>
   </div>
 </footer>
+${script}
 <script>
 // Dropdown menus: hover/focus opens them on desktop; the ▾ button opens them on touch screens.
 document.querySelectorAll('.sub-toggle').forEach((b) => b.addEventListener('click', (e) => {
@@ -439,6 +441,74 @@ const aboutPage = page({
 </section>`,
 });
 
+function shotFig(sh, i, big = false) {
+  const n = String(i + 1).padStart(2, '0');
+  return `<figure class="shot" id="shot-${n}">
+  <a href="${href(solShots.dir + sh.file)}" data-i="${i}"><img src="${href(solShots.dir + sh.thumb)}" alt="${esc(sh.title)}: ${esc(sh.caption)}" width="640" height="360" loading="lazy"></a>
+  <figcaption><strong>${esc(sh.title)}</strong>${big ? `<span>${esc(sh.caption)}</span>` : ''}</figcaption>
+</figure>`;
+}
+
+const lightbox = `<dialog class="lightbox" aria-label="Screenshot viewer">
+  <button class="lb-close" type="button" aria-label="Close">×</button>
+  <button class="lb-prev" type="button" aria-label="Previous screenshot">‹</button>
+  <figure><img alt=""><figcaption><strong></strong><span></span><em></em></figcaption></figure>
+  <button class="lb-next" type="button" aria-label="Next screenshot">›</button>
+</dialog>
+<script>
+(() => {
+  const shots = ${JSON.stringify(solShots.shots.map((s) => ({ src: href(solShots.dir + s.file), t: s.title, c: s.caption })))};
+  const d = document.querySelector('.lightbox'), img = d.querySelector('img'), cap = d.querySelector('figcaption');
+  let i = 0, x0 = null;
+  const show = (n) => {
+    i = (n + shots.length) % shots.length;
+    img.src = shots[i].src; img.alt = shots[i].t;
+    cap.querySelector('strong').textContent = shots[i].t;
+    cap.querySelector('span').textContent = shots[i].c;
+    cap.querySelector('em').textContent = (i + 1) + ' / ' + shots.length;
+    history.replaceState(null, '', '#shot-' + String(i + 1).padStart(2, '0'));
+  };
+  document.querySelectorAll('.shot a[data-i]').forEach((a) => a.addEventListener('click', (e) => {
+    if (e.ctrlKey || e.metaKey || e.shiftKey) return;
+    e.preventDefault(); show(+a.dataset.i); d.showModal();
+  }));
+  d.querySelector('.lb-prev').onclick = () => show(i - 1);
+  d.querySelector('.lb-next').onclick = () => show(i + 1);
+  d.querySelector('.lb-close').onclick = () => d.close();
+  d.addEventListener('click', (e) => { if (e.target === d) d.close(); });
+  d.addEventListener('close', () => history.replaceState(null, '', location.pathname));
+  d.addEventListener('keydown', (e) => { if (e.key === 'ArrowLeft') show(i - 1); if (e.key === 'ArrowRight') show(i + 1); });
+  d.addEventListener('touchstart', (e) => { x0 = e.touches[0].clientX; }, { passive: true });
+  d.addEventListener('touchend', (e) => { if (x0 === null) return; const dx = e.changedTouches[0].clientX - x0; if (Math.abs(dx) > 50) show(i + (dx < 0 ? 1 : -1)); x0 = null; });
+  const fromHash = () => {
+    const m = location.hash.match(/^#shot-([0-9]+)$/);
+    if (m && shots[+m[1] - 1] && !d.open) { show(+m[1] - 1); d.showModal(); }
+  };
+  window.addEventListener('hashchange', fromHash);
+  if (document.readyState === 'complete') fromHash(); else window.addEventListener('load', fromHash);
+})();
+</script>`;
+
+const shotsPage = page({
+  slug: '/solclient/screenshots/',
+  title: solShots.title,
+  description: solShots.intro,
+  ogImage: solShots.dir + solShots.og,
+  ogAlt: 'SolClient Map Editor showing a Furcadia dream drawn with its real art',
+  script: lightbox,
+  body: `<section class="page-head wrap">
+  <p class="kicker"><a href="${href('/solclient/')}">SolClient</a> · Screenshots</p>
+  <h1>SolClient preview</h1>
+  <p class="lede">${esc(solShots.intro)}</p>
+  <div class="actions">${discordUrl ? `<a class="btn" href="${esc(discordUrl)}" rel="noopener">Follow development on Discord</a>` : ''}<a class="btn btn-ghost" href="${href('/solclient/')}">About SolClient</a></div>
+</section>
+<section class="wrap section">
+  <div class="shots big">${solShots.shots.map((sh, i) => shotFig(sh, i, true)).join('')}</div>
+  <p class="meta">Click a screenshot to view it full size; use the arrow keys or swipe to move between them. Each one has its own link (for example <code>#shot-18</code>).</p>
+  <p class="meta">${esc(sol.disclaimer)}</p>
+</section>`,
+});
+
 const solPage = page({
   slug: '/solclient/',
   title: 'SolClient for Furcadia',
@@ -462,6 +532,13 @@ const solPage = page({
 <section class="wrap section prose">
   <h2>Safe by design</h2>
   <ul class="ticks">${(sol.safety || []).map((i) => `<li>${esc(i)}</li>`).join('')}</ul>
+  <h2>Screenshots</h2>
+</section>
+<section class="wrap section">
+  <div class="shots">${solShots.shots.slice(0, 6).map((sh, i) => shotFig(sh, i)).join('')}</div>
+  <p><a class="btn btn-ghost" href="${href('/solclient/screenshots/')}">See all ${solShots.shots.length} screenshots →</a></p>
+</section>
+<section class="wrap section prose">
   <h2>Release</h2>
   <p>SolClient isn't released yet. Release news, test builds and feedback all happen in the ${discordUrl ? `<a href="${esc(discordUrl)}" rel="noopener">Loveless Gaming Discord</a>` : 'Loveless Gaming Discord'}.</p>
   <p class="meta">${esc(sol.disclaimer)}</p>
@@ -500,14 +577,14 @@ const notFound = page({
 await rm(out, { recursive: true, force: true });
 await cp(path.join(root, 'static'), out, { recursive: true, filter: (src) => path.basename(src) !== 'README.md' });
 
-const pages = { 'index.html': home, 'mods/index.html': modsPage, 'solclient/index.html': solPage, 'books/index.html': booksPage, 'writing/index.html': writingPage, 'links/index.html': linksPage, 'about/index.html': aboutPage, '404.html': notFound };
+const pages = { 'index.html': home, 'mods/index.html': modsPage, 'solclient/index.html': solPage, 'solclient/screenshots/index.html': shotsPage, 'books/index.html': booksPage, 'writing/index.html': writingPage, 'links/index.html': linksPage, 'about/index.html': aboutPage, '404.html': notFound };
 for (const s of setups) pages[`mods/${s.slug}/index.html`] = setupPage(s);
 for (const [file, html] of Object.entries(pages)) {
   await mkdir(path.dirname(path.join(out, file)), { recursive: true });
   await writeFile(path.join(out, file), html);
 }
 
-const urls = ['/', '/mods/', ...setups.map((s) => `/mods/${s.slug}/`), '/solclient/', '/books/', '/writing/', '/links/', '/about/'];
+const urls = ['/', '/mods/', ...setups.map((s) => `/mods/${s.slug}/`), '/solclient/', '/solclient/screenshots/', '/books/', '/writing/', '/links/', '/about/'];
 await writeFile(
   path.join(out, 'sitemap.xml'),
   `<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n${urls.map((u) => `  <url><loc>https://${config.domain}${u}</loc></url>`).join('\n')}\n</urlset>\n`
