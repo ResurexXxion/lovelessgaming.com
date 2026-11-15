@@ -1,0 +1,27 @@
+{
+  "siteName": "Loveless Gaming",
+  "domain": "lovelessgaming.com",
+  "tagline": "Mods, books, writing and everything else I make, all in one place.",
+  "description": "Game mods, books, articles and links from Loveless Gaming.",
+  "author": "",
+  "contactEmail": "hello@lovelessgaming.com",
+  "mediumFeed": "",
+  "mediumProfile": "",
+  "newsletterUrl": "",
+  "about": [
+    "Loveless Gaming is my home base on the web. My game mods, my books and my articles all start here, so you don't have to chase them across Nexus, Amazon and Medium.",
+    "Mods are hosted where the modding community already lives, books are sold on Amazon, and articles are published on Medium. This site links to all of them and stays up to date."
+  ],
+  "links": [
+    { "label": "YouTube", "url": "" },
+    { "label": "Twitch", "url": "" },
+    { "label": "Discord", "url": "" },
+    { "label": "Nexus Mods", "url": "" },
+    { "label": "Thunderstore", "url": "" },
+    { "label": "Steam Workshop", "url": "" },
+    { "label": "Medium", "url": "" },
+    { "label": "Amazon author page", "url": "" },
+    { "label": "Ko-fi (support me)", "url": "" },
+    { "label": "GitHub", "url": "" }
+  ]
+}
