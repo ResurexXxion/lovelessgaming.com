@@ -1,5 +1,16 @@
 {
-  "releases": [],
+  "releases": [
+    {
+      "name": "Loveless Mod Consoles",
+      "game": "KCD2 · Kenshi · Mass Effect LE",
+      "summary": "Live log consoles for heavily modded games: follow the logs as you play, check your load order before launch, and get a plain-English post-mortem when the game crashes. Read-only and free (MIT).",
+      "version": "1.1",
+      "updated": "2026-11-15",
+      "links": [
+        { "label": "Download on GitHub", "url": "https://github.com/ResurexXxion/loveless-mod-consoles" }
+      ]
+    }
+  ],
   "games": [
     "Kingdom Come: Deliverance II",
     "S.T.A.L.K.E.R. Anomaly / GAMMA",

@@ -15,6 +15,8 @@ const readJSON = async (p) => JSON.parse(await readFile(path.join(root, p), 'utf
 const config = await readJSON('site.config.json');
 const { releases = [], games = [] } = await readJSON('content/mods.json');
 const { books = [] } = await readJSON('content/books.json');
+const sol = await readJSON('content/solclient.json');
+const discordUrl = ((config.links || []).find((l) => /discord/i.test(l.label)) || {}).url || '';
 const base = (process.env.BASE_PATH || '').replace(/\/$/, '');
 const year = new Date().getFullYear();
 
@@ -93,9 +95,10 @@ const mediumProfile = config.mediumProfile || (config.mediumFeed || '').replace(
 
 // ---------- page shell ----------
 
+// The logo links home, so there's no separate Home item (keeps the bar on one line on phones).
 const nav = [
-  ['/', 'Home'],
   ['/mods/', 'Mods'],
+  ['/solclient/', 'SolClient'],
   ['/books/', 'Books'],
   ['/writing/', 'Writing'],
   ['/links/', 'Links'],
@@ -251,6 +254,16 @@ const home = page({
     </a>
   </div>
 </section>
+<section class="wrap section">
+  <a class="feature" href="${href('/solclient/')}">
+    <div>
+      <p class="eyebrow">Featured project · ${esc(sol.status)}</p>
+      <h2>${esc(sol.name)} for Furcadia</h2>
+      <p>${esc(sol.tagline)}</p>
+    </div>
+    <span class="btn">Learn more</span>
+  </a>
+</section>
 ${medium.items.length ? `<section class="wrap section">
   <div class="section-head"><h2>Latest articles</h2><a href="${href('/writing/')}">All articles →</a></div>
   <div class="grid three">${medium.items.slice(0, 3).map(articleCard).join('')}</div>
@@ -268,8 +281,9 @@ const modsPage = page({
   description: `Game mods from ${config.siteName}.`,
   body: `<section class="page-head wrap"><h1>Mods</h1><p class="lede">Releases, patches and compatibility fixes. Downloads are hosted on the mod sites linked from each one.</p></section>
 <section class="wrap section">
-  <h2>Releases</h2>
+  <h2>Releases and tools</h2>
   ${releases.length ? `<div class="grid three">${releases.map(modCard).join('')}</div>` : empty('First releases coming soon.')}
+  <p class="meta">Playing Furcadia? See <a href="${href('/solclient/')}">SolClient</a>, my add-on for the Furcadia client.</p>
 </section>
 ${games.length ? `<section class="wrap section">
   <h2>Games I mod</h2>
@@ -311,6 +325,35 @@ const aboutPage = page({
 </section>`,
 });
 
+const solPage = page({
+  slug: '/solclient/',
+  title: 'SolClient for Furcadia',
+  description: sol.tagline,
+  body: `<section class="page-head wrap">
+  <p class="kicker">Furcadia · ${esc(sol.status)}${sol.version ? ` · v${esc(sol.version)}` : ''}</p>
+  <h1>${esc(sol.name)}</h1>
+  <p class="lede">${esc(sol.tagline)}</p>
+  <div class="actions">
+    ${discordUrl ? `<a class="btn" href="${esc(discordUrl)}" rel="noopener">Follow development on Discord</a>` : ''}
+  </div>
+</section>
+<section class="wrap section prose">
+  ${(sol.intro || []).map((p) => `<p>${esc(p)}</p>`).join('\n  ')}
+</section>
+<section class="wrap section">
+  <div class="grid three">
+    ${(sol.groups || []).map((g) => `<div class="card"><div class="card-body"><h3>${esc(g.title)}</h3><ul class="ticks">${g.items.map((i) => `<li>${esc(i)}</li>`).join('')}</ul></div></div>`).join('\n    ')}
+  </div>
+</section>
+<section class="wrap section prose">
+  <h2>Safe by design</h2>
+  <ul class="ticks">${(sol.safety || []).map((i) => `<li>${esc(i)}</li>`).join('')}</ul>
+  <h2>Release</h2>
+  <p>SolClient isn't released yet. Release news, test builds and feedback all happen in the ${discordUrl ? `<a href="${esc(discordUrl)}" rel="noopener">Loveless Gaming Discord</a>` : 'Loveless Gaming Discord'}.</p>
+  <p class="meta">${esc(sol.disclaimer)}</p>
+</section>`,
+});
+
 // Link-in-bio page: the one URL to put in every social profile.
 const linksPage = page({
   slug: '/links/',
@@ -322,6 +365,7 @@ const linksPage = page({
   <p class="lede">${esc(config.tagline)}</p>
   <ul class="linklist">
     <li><a href="${href('/mods/')}">Mods</a></li>
+    <li><a href="${href('/solclient/')}">SolClient for Furcadia</a></li>
     <li><a href="${href('/books/')}">Books</a></li>
     <li><a href="${href('/writing/')}">Writing</a></li>
     ${config.newsletterUrl ? `<li><a class="primary" href="${esc(config.newsletterUrl)}" rel="noopener">Join the email list</a></li>` : ''}
@@ -342,13 +386,13 @@ const notFound = page({
 await rm(out, { recursive: true, force: true });
 await cp(path.join(root, 'static'), out, { recursive: true, filter: (src) => path.basename(src) !== 'README.md' });
 
-const pages = { 'index.html': home, 'mods/index.html': modsPage, 'books/index.html': booksPage, 'writing/index.html': writingPage, 'links/index.html': linksPage, 'about/index.html': aboutPage, '404.html': notFound };
+const pages = { 'index.html': home, 'mods/index.html': modsPage, 'solclient/index.html': solPage, 'books/index.html': booksPage, 'writing/index.html': writingPage, 'links/index.html': linksPage, 'about/index.html': aboutPage, '404.html': notFound };
 for (const [file, html] of Object.entries(pages)) {
   await mkdir(path.dirname(path.join(out, file)), { recursive: true });
   await writeFile(path.join(out, file), html);
 }
 
-const urls = ['/', '/mods/', '/books/', '/writing/', '/links/', '/about/'];
+const urls = ['/', '/mods/', '/solclient/', '/books/', '/writing/', '/links/', '/about/'];
 await writeFile(
   path.join(out, 'sitemap.xml'),
   `<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n${urls.map((u) => `  <url><loc>https://${config.domain}${u}</loc></url>`).join('\n')}\n</urlset>\n`

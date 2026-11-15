@@ -179,6 +179,26 @@ h3 { font-size: 1.15rem; font-weight: 700; }
 .prose { max-width: 70ch; }
 .prose h2 { margin-top: 1.6em; }
 
+/* featured project band (home) */
+.feature {
+  display: flex; align-items: center; justify-content: space-between; gap: 20px; flex-wrap: wrap;
+  padding: 26px 28px; border-radius: var(--radius); text-decoration: none; color: var(--text);
+  background:
+    linear-gradient(120deg, color-mix(in srgb, var(--accent) 14%, var(--bg-raised)), var(--bg-raised) 60%);
+  border: 1px solid color-mix(in srgb, var(--accent) 40%, var(--line));
+  box-shadow: var(--shadow);
+}
+.feature:hover { color: var(--text); border-color: var(--accent); }
+.feature h2 { margin: 4px 0 6px; }
+.feature p { margin: 0; color: var(--muted); max-width: 70ch; }
+.feature .btn { flex: none; }
+
+/* tick lists (SolClient page) */
+.ticks { list-style: none; padding: 0; margin: 0 0 8px; display: grid; gap: 8px; }
+.ticks li { position: relative; padding-left: 24px; color: var(--muted); }
+.ticks li::before { content: "✓"; position: absolute; left: 0; color: var(--accent); font-weight: 800; }
+.card .ticks li { font-size: 0.95rem; }
+
 /* links page (link-in-bio) */
 .linkpage { max-width: 560px; text-align: center; padding-top: 48px; }
 .linkpage-logo { margin: 0 auto 16px; border-radius: 22px; box-shadow: var(--shadow); }

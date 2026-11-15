@@ -1,0 +1,47 @@
+{
+  "name": "SolClient™",
+  "status": "In development",
+  "version": "0.10",
+  "tagline": "A modern add-on for the official Furcadia desktop client: better chat, whispers, friends and dream tools, plus a full DragonSpeak studio.",
+  "intro": [
+    "SolClient works the way Furnarchy did, as a proxy that the official Furcadia client connects through, so it can add features to every line of game traffic. Unlike Furnarchy it never injects anything into Furcadia.exe, so client updates don't break it and antivirus has nothing to flag.",
+    "It's being built in the open with the Furcadia community. Testing, feedback and release news happen in the Discord."
+  ],
+  "groups": [
+    {
+      "title": "Control panel",
+      "items": [
+        "A live, modern copy of your chat: name colours, clickable links, filters and one-click Whisper / friend / ignore",
+        "Whispers as threads, one conversation per person",
+        "Friends-online tracker, keyword alerts and a doorbell sound for whispers and summons",
+        "Search Furcadia's own chat logs for every character",
+        "Launch Furcadia as any of your characters"
+      ]
+    },
+    {
+      "title": "SolClient Studio™",
+      "items": [
+        "DragonSpeak editor with sections, blocks, right-click editing and a classic look",
+        "Template library that gathers every template on your PC, including Draconic Magician scripts with fill-in forms",
+        "Generators for repetitive DS (guest rooms and more)",
+        "Map Editor: dream map viewer and map picker, with editing coming next"
+      ]
+    },
+    {
+      "title": "Modules",
+      "items": [
+        "Macros, away mode, outfits (Wardrobe) and an RP backpack per character",
+        "Dream bookmarks, who's-here list and a live DragonSpeak monitor for dream builders",
+        "Now Playing for Spotify, YouTube, VLC and more",
+        "Plain Python plugins: write your own module in a few lines"
+      ]
+    }
+  ],
+  "safety": [
+    "Listens only on your own PC (127.0.0.1); nothing else on your network can use it.",
+    "Never stores or logs your password, and refuses to send your login unless the link to Furcadia is encrypted.",
+    "Follows Furcadia's third-party proxy guidelines: login is left to the official client, a command prefix is used, and online checks are rate-limited.",
+    "Nothing personal is sent anywhere."
+  ],
+  "disclaimer": "Furcadia is a trademark of Dragon's Eye Productions. SolClient is an unofficial, fan-made add-on, not affiliated with or endorsed by Dragon's Eye Productions or Catnip Studios."
+}
