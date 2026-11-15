@@ -280,8 +280,8 @@ ${games.length ? `<section class="wrap section">
 const booksPage = page({
   slug: '/books/',
   title: 'Books',
-  description: `Books by ${config.author || config.siteName}.`,
-  body: `<section class="page-head wrap"><h1>Books</h1><p class="lede">Practical books written from lived experience.</p></section>
+  description: `Books by ${config.penName || config.author || config.siteName}.`,
+  body: `<section class="page-head wrap"><h1>Books</h1><p class="lede">Practical books written from lived experience${config.penName ? `, published under the pen name <strong>${esc(config.penName)}</strong>` : ''}.</p></section>
 <section class="wrap section">
   ${books.length ? `<div class="stack">${books.map(bookCard).join('')}</div>` : empty('The first book is in the works. Check back soon.')}
 </section>
@@ -291,8 +291,8 @@ ${newsletter}`,
 const writingPage = page({
   slug: '/writing/',
   title: 'Writing',
-  description: `Articles by ${config.author || config.siteName} on Medium.`,
-  body: `<section class="page-head wrap"><h1>Writing</h1><p class="lede">Articles published on Medium.${mediumProfile ? ` <a href="${esc(mediumProfile)}" rel="noopener">Follow on Medium →</a>` : ''}</p></section>
+  description: `Articles by ${config.penName || config.author || config.siteName} on Medium.`,
+  body: `<section class="page-head wrap"><h1>Writing</h1><p class="lede">Articles published on Medium${config.penName ? ` as <strong>${esc(config.penName)}</strong>` : ''}.${mediumProfile ? ` <a href="${esc(mediumProfile)}" rel="noopener">Follow on Medium →</a>` : ''}</p></section>
 <section class="wrap section">
   ${medium.items.length ? `<div class="grid three">${medium.items.map(articleCard).join('')}</div>` : articlesEmpty}
 </section>`,

@@ -4,24 +4,26 @@
   "tagline": "Mods, books, writing and everything else I make, all in one place.",
   "description": "Game mods, books, articles and links from Loveless Gaming.",
   "author": "",
+  "penName": "Mordren Illantru",
   "contactEmail": "hello@lovelessgaming.com",
-  "mediumFeed": "",
-  "mediumProfile": "",
+  "mediumFeed": "https://medium.com/feed/@Mordren_Illantru",
+  "mediumProfile": "https://medium.com/@Mordren_Illantru",
   "newsletterUrl": "",
   "about": [
     "Loveless Gaming is my home base on the web. My game mods, my books and my articles all start here, so you don't have to chase them across Nexus, Amazon and Medium.",
-    "Mods are hosted where the modding community already lives, books are sold on Amazon, and articles are published on Medium. This site links to all of them and stays up to date."
+    "Mods are hosted where the modding community already lives, books are sold on Amazon, and articles are published on Medium. My books and articles are written under the pen name Mordren Illantru. This site links to all of them and stays up to date."
   ],
   "links": [
-    { "label": "YouTube", "url": "" },
-    { "label": "Twitch", "url": "" },
+    { "label": "YouTube", "url": "https://www.youtube.com/@lovelesskuno" },
+    { "label": "Twitch", "url": "https://www.twitch.tv/resurexxxion" },
     { "label": "Discord", "url": "" },
-    { "label": "Nexus Mods", "url": "" },
+    { "label": "Nexus Mods", "url": "https://www.nexusmods.com/profile/ResurexXxion" },
+    { "label": "Steam", "url": "https://steamcommunity.com/id/cosmic_tiger/" },
     { "label": "Thunderstore", "url": "" },
-    { "label": "Steam Workshop", "url": "" },
-    { "label": "Medium", "url": "" },
+    { "label": "Medium (Mordren Illantru)", "url": "https://medium.com/@Mordren_Illantru" },
+    { "label": "X (Twitter)", "url": "https://x.com/ResurrexXxion" },
     { "label": "Amazon author page", "url": "" },
     { "label": "Ko-fi (support me)", "url": "" },
-    { "label": "GitHub", "url": "" }
+    { "label": "GitHub (tools and source code)", "url": "https://github.com/ResurexXxion" }
   ]
 }
