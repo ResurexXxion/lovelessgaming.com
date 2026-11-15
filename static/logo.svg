@@ -14,8 +14,10 @@
     </mask>
     <mask id="lmr" maskUnits="userSpaceOnUse" x="0" y="0" width="64" height="64">
       <rect width="64" height="64" fill="#fff"/>
-      <circle cx="41" cy="20.5" r="2.6" fill="#000"/>
-      <circle cx="46" cy="26.5" r="2.6" fill="#000"/>
+      <circle cx="43.5" cy="19.8" r="2.1" fill="#000"/>
+      <circle cx="39.1" cy="24.2" r="2.1" fill="#000"/>
+      <circle cx="47.9" cy="24.2" r="2.1" fill="#000"/>
+      <circle cx="43.5" cy="28.6" r="2.1" fill="#000"/>
     </mask>
   </defs>
   <g transform="translate(32 32) scale(0.9) translate(-32 -32)">
