@@ -122,8 +122,11 @@ function page({ slug, title, description, body }) {
 <meta property="og:description" content="${esc(description || config.description)}">
 <meta property="og:url" content="${esc(canonical)}">
 <meta name="theme-color" content="#0e0f13">
-<meta property="og:image" content="https://${esc(config.domain)}/apple-touch-icon.png">
-<meta name="twitter:card" content="summary">
+<meta property="og:image" content="https://${esc(config.domain)}/og-image.jpg">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="The Loveless Gaming logo, a cracked heart-shaped game controller, glowing over drifting embers">
+<meta name="twitter:card" content="summary_large_image">
 <link rel="icon" href="${href('/favicon.svg')}" type="image/svg+xml">
 <link rel="apple-touch-icon" href="${href('/apple-touch-icon.png')}">
 <link rel="stylesheet" href="${href('/styles.css')}">
