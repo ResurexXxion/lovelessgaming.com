@@ -103,21 +103,45 @@ const mediumProfile = config.mediumProfile || (config.mediumFeed || '').replace(
 // ---------- page shell ----------
 
 // The logo links home, so there's no separate Home item (keeps the bar on one line on phones).
+// Each item can have a dropdown tree: groups of child pages, shown on hover, keyboard focus or the ▾ button.
+// A child is [path or URL, label]; full URLs are marked as external.
 const nav = [
-  ['/mods/', 'Mods'],
-  ['/solclient/', 'SolClient'],
-  ['/books/', 'Books'],
-  ['/writing/', 'Writing'],
-  ['/links/', 'Links'],
-  ['/about/', 'About'],
+  ['/mods/', 'Mods', [
+    ['', [['/mods/', 'All mods']]],
+    ['My setups', setups.map((s) => [`/mods/${s.slug}/`, `${s.game}`])],
+    ['Releases', releases.filter((r) => r.links?.[0]?.url).map((r) => [r.links[0].url, r.name])],
+  ]],
+  ['/solclient/', 'SolClient', []],
+  ['/books/', 'Books', [['', books.filter((b) => b.links?.[0]?.url).slice(0, 6).map((b) => [b.links[0].url, b.title])]]],
+  ['/writing/', 'Writing', [['Latest', medium.items.slice(0, 5).map((a) => [a.link, a.title])]]],
+  ['/links/', 'Links', []],
+  ['/about/', 'About', []],
 ];
+
+function navTree(slug) {
+  return `<ul class="nav-list">${nav
+    .map(([p, label, groups]) => {
+      const cur = slug.startsWith(p) ? ' aria-current="page"' : '';
+      const gs = (groups || []).filter(([, items]) => items.length);
+      if (!gs.length) return `<li><a href="${href(p)}"${cur}>${label}</a></li>`;
+      const sub = gs
+        .map(([g, items]) => `${g ? `<li class="sub-group">${esc(g)}</li>` : ''}${items
+          .map(([u, t], i) => {
+            const ext = /^https?:/.test(u);
+            const last = i === items.length - 1 ? ' last' : '';
+            return `<li class="sub-item${g ? ' nested' : ''}${last}"><a href="${esc(href(u))}"${ext ? ' rel="noopener"' : ''}${!ext && u === slug ? ' aria-current="page"' : ''}>${esc(t)}${ext ? ' <span class="ext" aria-hidden="true">↗</span>' : ''}</a></li>`;
+          })
+          .join('')}`)
+        .join('');
+      return `<li class="has-sub"><a href="${href(p)}"${cur}>${label}</a><button class="sub-toggle" type="button" aria-expanded="false" aria-label="Show ${esc(label)} pages">▾</button><ul class="sub">${sub}</ul></li>`;
+    })
+    .join('')}</ul>`;
+}
 
 function page({ slug, title, description, body }) {
   const fullTitle = slug === '/' ? `${config.siteName}: ${config.tagline}` : `${title} · ${config.siteName}`;
   const canonical = `https://${config.domain}${slug}`;
-  const navHtml = nav
-    .map(([p, label]) => `<a href="${href(p)}"${slug.startsWith(p) ? ' aria-current="page"' : ''}>${label}</a>`)
-    .join('');
+  const navHtml = navTree(slug);
   return `<!doctype html>
 <html lang="en">
 <head>
@@ -164,6 +188,17 @@ ${body}
       .join('')}${config.contactEmail ? `<a href="mailto:${esc(config.contactEmail)}">Contact</a>` : ''}</span>
   </div>
 </footer>
+<script>
+// Dropdown menus: hover/focus opens them on desktop; the ▾ button opens them on touch screens.
+document.querySelectorAll('.sub-toggle').forEach((b) => b.addEventListener('click', (e) => {
+  e.stopPropagation();
+  const li = b.parentElement, open = !li.classList.contains('open');
+  document.querySelectorAll('.has-sub.open').forEach((o) => { o.classList.remove('open'); o.querySelector('.sub-toggle').setAttribute('aria-expanded', 'false'); });
+  li.classList.toggle('open', open); b.setAttribute('aria-expanded', String(open));
+}));
+document.addEventListener('click', () => document.querySelectorAll('.has-sub.open').forEach((o) => o.classList.remove('open')));
+document.addEventListener('keydown', (e) => { if (e.key === 'Escape') document.querySelectorAll('.has-sub.open').forEach((o) => o.classList.remove('open')); });
+</script>
 </body>
 </html>
 `;
