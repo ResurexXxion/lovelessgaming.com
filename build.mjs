@@ -122,7 +122,10 @@ function page({ slug, title, description, body }) {
 <meta property="og:description" content="${esc(description || config.description)}">
 <meta property="og:url" content="${esc(canonical)}">
 <meta name="theme-color" content="#0e0f13">
+<meta property="og:image" content="https://${esc(config.domain)}/apple-touch-icon.png">
+<meta name="twitter:card" content="summary">
 <link rel="icon" href="${href('/favicon.svg')}" type="image/svg+xml">
+<link rel="apple-touch-icon" href="${href('/apple-touch-icon.png')}">
 <link rel="stylesheet" href="${href('/styles.css')}">
 </head>
 <body>
@@ -130,7 +133,7 @@ function page({ slug, title, description, body }) {
 <header class="site-header">
   <div class="wrap header-inner">
     <a class="brand" href="${href('/')}" aria-label="${esc(config.siteName)} home">
-      <img src="${href('/favicon.svg')}" alt="" width="28" height="28">
+      <img src="${href('/logo.svg')}" alt="" width="30" height="30">
       <span>${esc(config.siteName)}</span>
     </a>
     <nav class="site-nav" aria-label="Main">${navHtml}</nav>

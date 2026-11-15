@@ -1,10 +1,26 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64">
   <defs>
-    <linearGradient id="g" x1="0" y1="0" x2="1" y2="1">
+    <linearGradient id="tg" gradientUnits="userSpaceOnUse" x1="8" y1="9" x2="56" y2="55">
       <stop offset="0" stop-color="#ffb347"/>
       <stop offset="1" stop-color="#ff5b3a"/>
     </linearGradient>
+    <path id="th" d="M32 55C20 45 8 37 8 24C8 15 15 9 23 9C27.5 9 30.5 11.5 32 14.5C33.5 11.5 36.5 9 41 9C49 9 56 15 56 24C56 37 44 45 32 55Z"/>
+    <clipPath id="tcl"><polygon points="0,0 32,0 32,13 29,23 35,31 29.5,40 33.5,48 32,58 32,64 0,64"/></clipPath>
+    <clipPath id="tcr"><polygon points="64,0 32,0 32,13 29,23 35,31 29.5,40 33.5,48 32,58 32,64 64,64"/></clipPath>
+    <mask id="tml" maskUnits="userSpaceOnUse" x="0" y="0" width="64" height="64">
+      <rect width="64" height="64" fill="#fff"/>
+      <rect x="15" y="22.2" width="12" height="4" rx="1" fill="#000"/>
+      <rect x="19" y="18.2" width="4" height="12" rx="1" fill="#000"/>
+    </mask>
+    <mask id="tmr" maskUnits="userSpaceOnUse" x="0" y="0" width="64" height="64">
+      <rect width="64" height="64" fill="#fff"/>
+      <circle cx="41" cy="20.5" r="2.6" fill="#000"/>
+      <circle cx="46" cy="26.5" r="2.6" fill="#000"/>
+    </mask>
   </defs>
   <rect width="64" height="64" rx="14" fill="#16181f"/>
-  <path d="M23 14v34h19" fill="none" stroke="url(#g)" stroke-width="8" stroke-linecap="round" stroke-linejoin="round"/>
+  <g transform="translate(32 32) scale(0.9) translate(-32 -32)">
+    <g transform="translate(-1.6 0) rotate(-4 32 55)"><use href="#th" fill="url(#tg)" clip-path="url(#tcl)" mask="url(#tml)"/></g>
+    <g transform="translate(1.6 0) rotate(4 32 55)"><use href="#th" fill="url(#tg)" clip-path="url(#tcr)" mask="url(#tmr)"/></g>
+  </g>
 </svg>

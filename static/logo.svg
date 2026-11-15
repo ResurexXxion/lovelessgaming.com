@@ -1,0 +1,25 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64">
+  <defs>
+    <linearGradient id="lg" gradientUnits="userSpaceOnUse" x1="8" y1="9" x2="56" y2="55">
+      <stop offset="0" stop-color="#ffb347"/>
+      <stop offset="1" stop-color="#ff5b3a"/>
+    </linearGradient>
+    <path id="lh" d="M32 55C20 45 8 37 8 24C8 15 15 9 23 9C27.5 9 30.5 11.5 32 14.5C33.5 11.5 36.5 9 41 9C49 9 56 15 56 24C56 37 44 45 32 55Z"/>
+    <clipPath id="lcl"><polygon points="0,0 32,0 32,13 29,23 35,31 29.5,40 33.5,48 32,58 32,64 0,64"/></clipPath>
+    <clipPath id="lcr"><polygon points="64,0 32,0 32,13 29,23 35,31 29.5,40 33.5,48 32,58 32,64 64,64"/></clipPath>
+    <mask id="lml" maskUnits="userSpaceOnUse" x="0" y="0" width="64" height="64">
+      <rect width="64" height="64" fill="#fff"/>
+      <rect x="15" y="22.2" width="12" height="4" rx="1" fill="#000"/>
+      <rect x="19" y="18.2" width="4" height="12" rx="1" fill="#000"/>
+    </mask>
+    <mask id="lmr" maskUnits="userSpaceOnUse" x="0" y="0" width="64" height="64">
+      <rect width="64" height="64" fill="#fff"/>
+      <circle cx="41" cy="20.5" r="2.6" fill="#000"/>
+      <circle cx="46" cy="26.5" r="2.6" fill="#000"/>
+    </mask>
+  </defs>
+  <g transform="translate(32 32) scale(0.9) translate(-32 -32)">
+    <g transform="translate(-1.6 0) rotate(-4 32 55)"><use href="#lh" fill="url(#lg)" clip-path="url(#lcl)" mask="url(#lml)"/></g>
+    <g transform="translate(1.6 0) rotate(4 32 55)"><use href="#lh" fill="url(#lg)" clip-path="url(#lcr)" mask="url(#lmr)"/></g>
+  </g>
+</svg>
