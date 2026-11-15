@@ -284,5 +284,9 @@
         "why": "Changes the bathhouse maids' outfits. My addition."
       }
     ]
+  },
+  "fixes": {
+    "url": "https://github.com/ResurexXxion/loveless-mod-fixes/tree/main/kcd2",
+    "text": "My user.cfg, the key scheme and the small fixes from this page are free to download."
   }
 }

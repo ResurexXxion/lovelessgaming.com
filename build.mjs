@@ -245,6 +245,7 @@ ${s.lessons?.length ? `<section class="wrap section">
 </section>` : ''}
 <section class="wrap section prose">
   ${s.status ? `<h2>Status</h2><p>${esc(s.status)}</p>` : ''}
+  ${s.fixes ? `<h2>Get the fixes</h2><p>${esc(s.fixes.text)} <a href="${esc(s.fixes.url)}" rel="noopener">Loveless Mod Fixes on GitHub →</a></p>` : ''}
   ${s.tool ? `<h2>The tool behind it</h2><p>${esc(s.tool.why)} <a href="${esc(s.tool.url)}" rel="noopener">Get ${esc(s.tool.name)} →</a></p>` : ''}
   ${s.omitted ? `<p class="meta">${esc(s.omitted)}</p>` : ''}
   <p class="meta">Questions about this setup? Ask in the ${discordUrl ? `<a href="${esc(discordUrl)}" rel="noopener">Discord</a>` : 'Discord'}.</p>

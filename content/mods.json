@@ -9,6 +9,15 @@
       "links": [
         { "label": "Download on GitHub", "url": "https://github.com/ResurexXxion/loveless-mod-consoles" }
       ]
+    },
+    {
+      "name": "Loveless Mod Fixes",
+      "game": "KCD2 (more games coming)",
+      "summary": "Configs, key layouts and fixes from my modded setups: a tuned KCD2 user.cfg, a key scheme that ends the F-key clashes, and quick fixes for disabled or missing mods.",
+      "updated": "2026-11-15",
+      "links": [
+        { "label": "Get the fixes on GitHub", "url": "https://github.com/ResurexXxion/loveless-mod-fixes" }
+      ]
     }
   ],
   "games": [
