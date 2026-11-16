@@ -13,6 +13,19 @@
     "Loveless Gaming is my home base on the web. My game mods, my books and my articles all start here, so you don't have to chase them across Nexus, Amazon and Medium.",
     "Mods are hosted where the modding community already lives, books are sold on Amazon, and articles are published on Medium. My books and articles are written under the pen name Mordren Illantru. This site links to all of them and stays up to date."
   ],
+  "support": {
+    "intro": "Everything I make is free: SolClient, the mod tools and fixes, the setups and guides. If it's saved you time or made your game better and you'd like to chip in, it goes straight back into building more of it. Thank you!",
+    "platforms": [
+      { "name": "Ko-fi", "url": "", "note": "One-time tips or a small monthly amount, no account needed." },
+      { "name": "Patreon", "url": "", "note": "Monthly support, with early looks at what I'm working on." },
+      { "name": "GitHub Sponsors", "url": "", "note": "For the open-source mod tools on GitHub." }
+    ],
+    "promises": [
+      "Donations are optional. SolClient and everything else here stay free, with no paid features.",
+      "Supporting doesn't buy anything inside Furcadia or any other game.",
+      "Not into donating? A share, a bug report, or a Furnarchy module you'd like ported helps just as much."
+    ]
+  },
   "links": [
     { "label": "YouTube", "url": "https://www.youtube.com/@lovelesskuno" },
     { "label": "Twitch", "url": "https://www.twitch.tv/resurexxxion" },

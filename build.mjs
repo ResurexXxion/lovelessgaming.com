@@ -24,6 +24,13 @@ const setups = await Promise.all(
     .sort()
     .map((f) => readJSON(`content/setups/${f}`))
 );
+// Support (donations) page: only built and linked once at least one platform has a URL.
+// SUPPORT_PREVIEW=1 fills placeholder links so the page can be checked locally before any account exists.
+const support = config.support || {};
+const supportLinks = (support.platforms || [])
+  .map((p) => ({ ...p, url: p.url || (process.env.SUPPORT_PREVIEW ? '#' : '') }))
+  .filter((p) => p.url);
+const hasSupport = supportLinks.length > 0;
 const discordUrl = ((config.links || []).find((l) => /discord/i.test(l.label)) || {}).url || '';
 const base = (process.env.BASE_PATH || '').replace(/\/$/, '');
 const year = new Date().getFullYear();
@@ -116,7 +123,7 @@ const nav = [
   ['/books/', 'Books', [['', books.filter((b) => b.links?.[0]?.url).slice(0, 6).map((b) => [b.links[0].url, b.title])]]],
   ['/writing/', 'Writing', [['Latest', medium.items.slice(0, 5).map((a) => [a.link, a.title])]]],
   ['/links/', 'Links', []],
-  ['/about/', 'About', []],
+  ['/about/', 'About', hasSupport ? [['', [['/about/', 'About me'], ['/support/', 'Support ♥']]]] : []],
 ];
 
 function navTree(slug) {
@@ -186,7 +193,7 @@ ${body}
     <span class="footer-links">${(config.links || [])
       .filter((l) => l.url)
       .map((l) => `<a href="${esc(l.url)}" rel="noopener">${esc(l.label)}</a>`)
-      .join('')}${config.contactEmail ? `<a href="mailto:${esc(config.contactEmail)}">Contact</a>` : ''}</span>
+      .join('')}${config.contactEmail ? `<a href="mailto:${esc(config.contactEmail)}">Contact</a>` : ''}${hasSupport ? `<a href="${href('/support/')}">Support ♥</a>` : ''}</span>
   </div>
 </footer>
 ${script}
@@ -520,6 +527,7 @@ const solPage = page({
   <div class="actions">
     ${discordUrl ? `<a class="btn" href="${esc(discordUrl)}" rel="noopener">Follow development on Discord</a>` : ''}
     ${sol.changelog ? `<a class="btn btn-ghost" href="${esc(sol.changelog)}" rel="noopener">Changelog</a>` : ''}
+    ${hasSupport ? `<a class="btn btn-ghost" href="${href('/support/')}">Support development ♥</a>` : ''}
   </div>
 </section>
 <section class="wrap section prose">
@@ -559,11 +567,39 @@ const linksPage = page({
     <li><a href="${href('/mods/')}">Mods</a></li>
     <li><a href="${href('/solclient/')}">SolClient for Furcadia</a></li>
     <li><a href="${href('/books/')}">Books</a></li>
+    ${hasSupport ? `<li><a class="primary" href="${href('/support/')}">Support my work ♥</a></li>` : ''}
     <li><a href="${href('/writing/')}">Writing</a></li>
     ${config.newsletterUrl ? `<li><a class="primary" href="${esc(config.newsletterUrl)}" rel="noopener">Join the email list</a></li>` : ''}
     ${linkRows.map((l) => `<li><a href="${esc(l.url)}" rel="noopener">${esc(l.label)}</a></li>`).join('\n    ')}
     ${config.contactEmail ? `<li><a href="mailto:${esc(config.contactEmail)}">Email me</a></li>` : ''}
   </ul>
+</section>`,
+});
+
+const supportPage = page({
+  slug: '/support/',
+  title: 'Support',
+  description: support.intro,
+  body: `<section class="page-head wrap">
+  <p class="kicker">Support</p>
+  <h1>Support Loveless Gaming</h1>
+  <p class="lede">${esc(support.intro || '')}</p>
+</section>
+<section class="wrap section">
+  <div class="grid three">
+    ${supportLinks.map((p) => `<div class="card support-card"><div class="card-body">
+      <h3>${esc(p.name)}</h3>
+      <p>${esc(p.note || '')}</p>
+      <div class="actions"><a class="btn" href="${esc(p.url)}" rel="noopener">Support on ${esc(p.name)}</a></div>
+    </div></div>`).join('')}
+  </div>
+</section>
+${support.promises?.length ? `<section class="wrap section prose">
+  <h2>Good to know</h2>
+  <ul class="ticks">${support.promises.map((t) => `<li>${esc(t)}</li>`).join('')}</ul>
+</section>` : ''}
+<section class="wrap section prose">
+  <p class="meta">Questions? ${config.contactEmail ? `Email <a href="mailto:${esc(config.contactEmail)}">${esc(config.contactEmail)}</a>` : ''}${discordUrl ? ` or ask in the <a href="${esc(discordUrl)}" rel="noopener">Discord</a>` : ''}.</p>
 </section>`,
 });
 
@@ -578,14 +614,14 @@ const notFound = page({
 await rm(out, { recursive: true, force: true });
 await cp(path.join(root, 'static'), out, { recursive: true, filter: (src) => path.basename(src) !== 'README.md' });
 
-const pages = { 'index.html': home, 'mods/index.html': modsPage, 'solclient/index.html': solPage, 'solclient/screenshots/index.html': shotsPage, 'books/index.html': booksPage, 'writing/index.html': writingPage, 'links/index.html': linksPage, 'about/index.html': aboutPage, '404.html': notFound };
+const pages = { 'index.html': home, 'mods/index.html': modsPage, 'solclient/index.html': solPage, 'solclient/screenshots/index.html': shotsPage, 'books/index.html': booksPage, 'writing/index.html': writingPage, 'links/index.html': linksPage, 'about/index.html': aboutPage, ...(hasSupport ? { 'support/index.html': supportPage } : {}), '404.html': notFound };
 for (const s of setups) pages[`mods/${s.slug}/index.html`] = setupPage(s);
 for (const [file, html] of Object.entries(pages)) {
   await mkdir(path.dirname(path.join(out, file)), { recursive: true });
   await writeFile(path.join(out, file), html);
 }
 
-const urls = ['/', '/mods/', ...setups.map((s) => `/mods/${s.slug}/`), '/solclient/', '/solclient/screenshots/', '/books/', '/writing/', '/links/', '/about/'];
+const urls = ['/', '/mods/', ...setups.map((s) => `/mods/${s.slug}/`), '/solclient/', '/solclient/screenshots/', '/books/', '/writing/', '/links/', '/about/', ...(hasSupport ? ['/support/'] : [])];
 await writeFile(
   path.join(out, 'sitemap.xml'),
   `<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n${urls.map((u) => `  <url><loc>https://${config.domain}${u}</loc></url>`).join('\n')}\n</urlset>\n`
