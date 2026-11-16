@@ -43,5 +43,7 @@
     "Follows Furcadia's third-party proxy guidelines: login is left to the official client, a command prefix is used, and online checks are rate-limited.",
     "Nothing personal is sent anywhere."
   ],
-  "disclaimer": "Furcadia is a trademark of Dragon's Eye Productions. SolClient is an unofficial, fan-made add-on, not affiliated with or endorsed by Dragon's Eye Productions or Catnip Studios."
+  "disclaimer": "Furcadia is a trademark of Dragon's Eye Productions. SolClient is an unofficial, fan-made add-on, not affiliated with or endorsed by Dragon's Eye Productions or Catnip Studios.",
+  "changelog": "https://github.com/ResurexXxion/solclient/blob/main/CHANGELOG.md",
+  "repo": "https://github.com/ResurexXxion/solclient"
 }

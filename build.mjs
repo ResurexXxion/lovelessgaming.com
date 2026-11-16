@@ -112,7 +112,7 @@ const nav = [
     ['My setups', setups.map((s) => [`/mods/${s.slug}/`, `${s.game}`])],
     ['Releases', releases.filter((r) => r.links?.[0]?.url).map((r) => [r.links[0].url, r.name])],
   ]],
-  ['/solclient/', 'SolClient', [['', [['/solclient/', 'About SolClient'], ['/solclient/screenshots/', `Screenshots (${solShots.shots.length})`]]]]],
+  ['/solclient/', 'SolClient', [['', [['/solclient/', 'About SolClient'], ['/solclient/screenshots/', `Screenshots (${solShots.shots.length})`], ...(sol.changelog ? [[sol.changelog, 'Changelog']] : [])]]]],
   ['/books/', 'Books', [['', books.filter((b) => b.links?.[0]?.url).slice(0, 6).map((b) => [b.links[0].url, b.title])]]],
   ['/writing/', 'Writing', [['Latest', medium.items.slice(0, 5).map((a) => [a.link, a.title])]]],
   ['/links/', 'Links', []],
@@ -519,6 +519,7 @@ const solPage = page({
   <p class="lede">${esc(sol.tagline)}</p>
   <div class="actions">
     ${discordUrl ? `<a class="btn" href="${esc(discordUrl)}" rel="noopener">Follow development on Discord</a>` : ''}
+    ${sol.changelog ? `<a class="btn btn-ghost" href="${esc(sol.changelog)}" rel="noopener">Changelog</a>` : ''}
   </div>
 </section>
 <section class="wrap section prose">
