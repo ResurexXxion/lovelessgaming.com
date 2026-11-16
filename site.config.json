@@ -16,7 +16,7 @@
   "support": {
     "intro": "Everything I make is free: SolClient, the mod tools and fixes, the setups and guides. If it's saved you time or made your game better and you'd like to chip in, it goes straight back into building more of it. Thank you!",
     "platforms": [
-      { "name": "Ko-fi", "url": "", "note": "One-time tips or a small monthly amount, no account needed." },
+      { "name": "Ko-fi", "url": "https://ko-fi.com/lovelessgaming", "note": "One-time tips or a small monthly amount, no account needed." },
       { "name": "Patreon", "url": "", "note": "Monthly support, with early looks at what I'm working on." },
       { "name": "GitHub Sponsors", "url": "", "note": "For the open-source mod tools on GitHub." }
     ],
@@ -36,7 +36,7 @@
     { "label": "Medium (Mordren Illantru)", "url": "https://medium.com/@Mordren_Illantru" },
     { "label": "X (Twitter)", "url": "https://x.com/ResurrexXxion" },
     { "label": "Amazon author page", "url": "" },
-    { "label": "Ko-fi (support me)", "url": "" },
+    { "label": "Ko-fi (support me)", "url": "https://ko-fi.com/lovelessgaming" },
     { "label": "GitHub (tools and source code)", "url": "https://github.com/ResurexXxion" }
   ]
 }
