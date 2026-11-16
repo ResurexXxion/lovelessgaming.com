@@ -1,8 +1,9 @@
 {
   "siteName": "Loveless Gaming",
   "domain": "lovelessgaming.com",
-  "tagline": "Mods, books, writing and everything else I make, all in one place.",
-  "description": "Game mods, books, articles and links from Loveless Gaming.",
+  "tagline": "Free game mods, modding tools and SolClient for Furcadia. Everything I make, all in one place.",
+  "homeTitle": "Loveless Gaming: free game mods, modding tools and SolClient for Furcadia",
+  "description": "Free game mods, modding tools and fixes from Loveless Gaming, plus SolClient, a modern add-on for the Furcadia client.",
   "author": "",
   "penName": "Mordren Illantru",
   "contactEmail": "hello@lovelessgaming.com",
@@ -10,8 +11,8 @@
   "mediumProfile": "https://medium.com/@Mordren_Illantru",
   "newsletterUrl": "",
   "about": [
-    "Loveless Gaming is my home base on the web. My game mods, my books and my articles all start here, so you don't have to chase them across Nexus, Amazon and Medium.",
-    "Mods are hosted where the modding community already lives, books are sold on Amazon, and articles are published on Medium. My books and articles are written under the pen name Mordren Illantru. This site links to all of them and stays up to date."
+    "Loveless Gaming is my home base on the web. My game mods, modding tools and SolClient for Furcadia all start here, so you don't have to chase them across Nexus, GitHub and Discord.",
+    "Mods are hosted where the modding community already lives, and the tools and source code are on GitHub. Books (for Amazon) and articles (on Medium) are on the way, written under the pen name Mordren Illantru. This site links to all of it and stays up to date."
   ],
   "support": {
     "intro": "Everything I make is free: SolClient, the mod tools and fixes, the setups and guides. If it's saved you time or made your game better and you'd like to chip in, it goes straight back into building more of it. Thank you!",
