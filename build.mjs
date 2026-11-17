@@ -749,4 +749,16 @@ await writeFile(
 );
 await writeFile(path.join(out, 'robots.txt'), `User-agent: *\nAllow: /\nSitemap: https://${config.domain}/sitemap.xml\n`);
 
+// security.txt (RFC 9116): who to tell about a security problem. Security scanners and site-reputation
+// services look for it. Expires is required; the daily rebuild keeps it about 6 months ahead.
+const securityContact = config.securityEmail || config.contactEmail;
+if (securityContact) {
+  const expires = new Date(Date.now() + 182 * 864e5).toISOString().replace(/\.\d+Z$/, 'Z');
+  await mkdir(path.join(out, '.well-known'), { recursive: true });
+  await writeFile(
+    path.join(out, '.well-known', 'security.txt'),
+    `Contact: mailto:${securityContact}\nExpires: ${expires}\nPreferred-Languages: en\nCanonical: https://${config.domain}/.well-known/security.txt\n`
+  );
+}
+
 console.log(`Built ${Object.keys(pages).length} pages into dist/${base ? ` (base path ${base})` : ''}.`);
