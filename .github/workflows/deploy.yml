@@ -32,9 +32,16 @@ jobs:
         run: node build.mjs
         env:
           BASE_PATH: ${{ steps.pages.outputs.base_path }}
-      - uses: actions/upload-pages-artifact@v4
+      # Same packaging as actions/upload-pages-artifact, minus its rule that drops hidden folders,
+      # so dist/.well-known/security.txt gets published.
+      - name: Archive site
+        run: tar --dereference --hard-dereference --directory dist -cvf "$RUNNER_TEMP/artifact.tar" --exclude=.git --exclude=.github .
+      - uses: actions/upload-artifact@v4
         with:
-          path: dist
+          name: github-pages
+          path: ${{ runner.temp }}/artifact.tar
+          retention-days: 1
+          if-no-files-found: error
 
   deploy:
     needs: build
