@@ -17,6 +17,7 @@ const { releases = [], games = [] } = await readJSON('content/mods.json');
 const { books = [] } = await readJSON('content/books.json');
 const sol = await readJSON('content/solclient.json');
 const solShots = await readJSON('content/solclient-screenshots.json');
+const den = await readJSON('content/home.json').catch(() => ({}));
 // One JSON file per game setup in content/setups/, each becoming /mods/<slug>/.
 const setups = await Promise.all(
   (await readdir(path.join(root, 'content/setups')).catch(() => []))
@@ -157,6 +158,36 @@ const changelogRaw = sol.changelogRaw || (sol.changelog || '').replace(/^https:\
 const solChanges = await fetchChangelog(changelogRaw.startsWith('https://raw.') ? changelogRaw : '');
 const solVersion = solChanges[0]?.version || sol.version || '';
 
+// ---------- YouTube ----------
+// Latest uploads from the channel's public feed. Thumbnails are downloaded at build time and served
+// from this site, so visitors' browsers never contact YouTube unless they click a video.
+
+async function fetchYouTube(channelId) {
+  if (!channelId || process.env.SKIP_FEEDS) return { items: [] };
+  try {
+    const res = await fetch(`https://www.youtube.com/feeds/videos.xml?channel_id=${encodeURIComponent(channelId)}`, { headers: { 'User-Agent': 'site-build/1.0' }, signal: AbortSignal.timeout(15000) });
+    if (!res.ok) throw new Error(`HTTP ${res.status}`);
+    const xml = await res.text();
+    const items = [...xml.matchAll(/<entry>([\s\S]*?)<\/entry>/g)].map((m) => ({
+      id: tag(m[1], 'yt:videoId'),
+      title: decode(tag(m[1], 'title')),
+      published: tag(m[1], 'published'),
+    })).filter((v) => /^[\w-]{6,20}$/.test(v.id));
+    const thumbs = {};
+    for (const v of items.slice(0, 3)) {
+      const t = await fetch(`https://i.ytimg.com/vi/${v.id}/mqdefault.jpg`, { signal: AbortSignal.timeout(15000) });
+      if (t.ok) thumbs[v.id] = Buffer.from(await t.arrayBuffer());
+    }
+    const shown = items.filter((v) => thumbs[v.id]);
+    console.log(`YouTube feed: ${items.length} videos (${shown.length} with thumbnails shown)`);
+    return { items: shown, thumbs };
+  } catch (e) {
+    console.warn(`YouTube feed failed (${e.message}); building without videos.`);
+    return { items: [] };
+  }
+}
+const youtube = await fetchYouTube(config.youtubeChannelId);
+
 // ---------- page shell ----------
 
 // The logo links home, so there's no separate Home item (keeps the bar on one line on phones).
@@ -216,10 +247,12 @@ function page({ slug, title, description, body, ogImage, ogAlt, script = '', ld 
 <meta property="og:image" content="https://${esc(config.domain)}${esc(ogImage || '/og-image.jpg')}">
 <meta property="og:image:width" content="1200">
 <meta property="og:image:height" content="630">
-<meta property="og:image:alt" content="${esc(ogAlt || 'The Loveless Gaming logo, a cracked heart-shaped game controller, glowing over drifting embers')}">
+<meta property="og:image:alt" content="${esc(ogAlt || 'Loveless Gaming: I break games, then I fix them. Two taped-on screenshots, a modded KCD2 courtyard and SolClient map editor.')}">
 <meta name="twitter:card" content="summary_large_image">
 <link rel="icon" href="${href('/favicon.svg')}" type="image/svg+xml">
 <link rel="apple-touch-icon" href="${href('/apple-touch-icon.png')}">
+<link rel="preload" href="${href('/fonts/bungee-latin-400-normal.woff2')}" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="${href('/fonts/ibm-plex-sans-latin-400-normal.woff2')}" as="font" type="font/woff2" crossorigin>
 <link rel="stylesheet" href="${href('/styles.css')}">
 ${noindex ? '<meta name="robots" content="noindex">\n' : ''}${ld}
 </head>
@@ -239,7 +272,7 @@ ${body}
 </main>
 <footer class="site-footer">
   <div class="wrap footer-inner">
-    <span>© ${year} ${esc(config.author || config.siteName)}</span>
+    <span>${config.signOff ? `<span class="footer-sign">${esc(config.signOff)}</span><br>` : ''}© ${year} ${esc(config.author || config.siteName)}</span>
     <span class="footer-links">${(config.links || [])
       .filter((l) => l.url)
       .map((l) => `<a href="${esc(l.url)}" rel="noopener">${esc(l.label)}</a>`)
@@ -377,13 +410,16 @@ const articlesEmpty =
     ? empty(`Couldn't reach Medium just now.${mediumProfile ? ` <a href="${esc(mediumProfile)}" rel="noopener">Read the articles on Medium →</a>` : ''}`)
     : empty('The first articles are on the way.');
 
-// "Join the Discord" band; pages pass their own heading and line.
+// Discord invite as a sticky note; pages pass their own heading and line.
 const discordBand = (title, text) =>
   discordUrl
     ? `<section class="band">
   <div class="wrap band-inner">
-    <div><h2>${title}</h2><p>${text}</p></div>
-    <a class="btn btn-discord" href="${esc(discordUrl)}" rel="noopener">Join the Discord</a>
+    <div class="note-card">
+      <h2>${title}</h2>
+      <p>${text}</p>
+      <a class="btn btn-discord" href="${esc(discordUrl)}" rel="noopener">Join the Discord</a>
+    </div>
   </div>
 </section>`
     : '';
@@ -391,8 +427,11 @@ const discordBand = (title, text) =>
 const newsletter = config.newsletterUrl
   ? `<section class="band">
   <div class="wrap band-inner">
-    <div><h2>Get new releases by email</h2><p>New mods, books and articles. No spam, unsubscribe any time.</p></div>
-    <a class="btn" href="${esc(config.newsletterUrl)}" rel="noopener">Join the list</a>
+    <div class="note-card">
+      <h2>Get new stuff by email</h2>
+      <p>New mods, tools, books and articles. No spam, unsubscribe any time.</p>
+      <a class="btn" href="${esc(config.newsletterUrl)}" rel="noopener">Join the list</a>
+    </div>
   </div>
 </section>`
   : '';
@@ -411,23 +450,50 @@ const latestSol = solChanges[0];
 // Screenshots shown beside SolClient on the home page (indexes into solclient-screenshots.json).
 const homeShots = (sol.homeShots || [17, 15, 1]).filter((i) => solShots.shots[i]);
 
-const tile = (url, icon, title, text) => `<a class="tile" href="${href(url)}">
-      <span class="tile-icon" aria-hidden="true">${icon}</span>
-      <h2>${title}</h2>
-      <p>${text}</p>
-    </a>`;
-const homeTiles = [
-  tile('/mods/', '⚙', 'Mods and tools', releases.length ? `${releases.length} free release${releases.length === 1 ? '' : 's'}, newest: ${esc(releases[0].name)}` : `Fixes, tweaks and load-order know-how for ${games.length} games.`),
-  ...(setups.length ? [tile(setups.length === 1 ? `/mods/${setups[0].slug}/` : '/mods/', '☰', 'My setups', setups.length === 1 ? `My full ${esc(setups[0].game)} build: what I added, removed and fixed.` : `${setups.length} full modded setups, with the fixes they took.`)] : []),
-  ...(hasBooks ? [tile('/books/', '❧', 'Books', `Latest: ${esc(books[0].title)}`)] : []),
-  ...(hasArticles ? [tile('/writing/', '✎', 'Writing', `Latest: ${esc(latestArticle.title)}`)] : []),
-  ...(discordUrl ? [`<a class="tile" href="${esc(discordUrl)}" rel="noopener">
-      <span class="tile-icon" aria-hidden="true">💬</span>
-      <h2>Community</h2>
-      <p>Chat, help with mods, and SolClient news and test builds on Discord.</p>
-    </a>`] : []),
+// Home page personal bits live in content/home.json: intro, stickers, pinned photos, "now working on".
+// {solVersion} in any text is replaced with SolClient's latest version from the changelog.
+const fill = (s) => String(s ?? '').replace(/\{solVersion\}/g, solVersion || '');
+const homeIntro = fill(den.intro || config.tagline);
+
+const stickerHtml = (den.stickers || [])
+  .map((s) => `<a class="sticker${s.color ? ` ${esc(s.color)}` : ''}" href="${esc(href(s.url))}">${esc(fill(s.text))}</a>`)
+  .join('');
+
+const pinHtml = (den.pins || [])
+  .slice(0, 2)
+  .map((p) => `<figure class="pin"><a href="${esc(href(p.url || p.img))}"><img src="${esc(href(p.img))}" alt="${esc(p.alt || p.caption)}" width="960" height="600"></a><figcaption>${esc(p.caption)}</figcaption></figure>`)
+  .join('');
+
+const statusLabel = { wip: 'in progress', testing: 'testing', next: 'up next', done: 'done' };
+const nowItems = (den.now || []).map((n) => {
+  // "solclient": the note comes from the newest changelog entry, so it never goes stale.
+  const note = n.auto === 'solclient' && latestSol ? `v${latestSol.version}: ${changeHeadline(latestSol.items[0])}.` : fill(n.note);
+  const what = n.url ? `<a href="${esc(href(n.url))}"${/^https?:/.test(n.url) ? ' rel="noopener"' : ''}>${esc(fill(n.what))}</a>` : esc(fill(n.what));
+  return `<li><span class="what">${what}</span><span class="status ${esc(n.status || '')}">${esc(n.label || statusLabel[n.status] || n.status || '')}</span><span class="note">${esc(note)}</span></li>`;
+});
+
+// Releases and setups as one hand-made list (not a card grid).
+const madeItems = [
+  ...releases.map((r) => {
+    const main = r.links?.[0];
+    return `<li>
+      <h3>${main?.url ? `<a href="${esc(href(main.url))}" rel="noopener">${esc(r.name)}</a>` : esc(r.name)}</h3>
+      <p>${esc(r.summary)}</p>
+      <p class="tags">${String(r.game || '').split(/\s*·\s*/).filter(Boolean).map((g) => `<span>${esc(g)}</span>`).join('')}${r.version ? `<span>v${esc(r.version)}</span>` : ''}${r.updated ? `<span>${esc(fmtDate(r.updated))}</span>` : ''}</p>
+      ${main?.url ? `<a class="btn btn-small btn-ghost go" href="${esc(href(main.url))}" rel="noopener">${esc(main.label)} →</a>` : ''}
+    </li>`;
+  }),
+  ...setups.map((s) => `<li>
+      <h3><a href="${href(`/mods/${s.slug}/`)}">${esc(s.title)}</a></h3>
+      <p>${esc(s.summary)}</p>
+      <p class="tags"><span>${esc(s.game)}</span><span>full setup</span>${s.updated ? `<span>${esc(fmtDate(s.updated))}</span>` : ''}</p>
+      <a class="btn btn-small btn-ghost go" href="${href(`/mods/${s.slug}/`)}">Read it →</a>
+    </li>`),
 ];
-const homeKicker = ['Mods', 'Tools', 'SolClient', ...(hasBooks ? ['Books'] : []), ...(hasArticles ? ['Writing'] : [])].join(' · ');
+
+const videoHtml = youtube.items.slice(0, 3).map((v) => `<figure class="video"><a href="https://www.youtube.com/watch?v=${esc(v.id)}" rel="noopener"><img src="${href(`/img/yt/${v.id}.jpg`)}" alt="" width="320" height="180" loading="lazy"><figcaption>${esc(v.title)}<span class="when">${esc(fmtDate(v.published))}</span></figcaption></a></figure>`);
+const twitchUrl = ((config.links || []).find((l) => /twitch/i.test(l.label)) || {}).url || '';
+const youtubeUrl = ((config.links || []).find((l) => /youtube/i.test(l.label)) || {}).url || '';
 
 const home = page({
   slug: '/',
@@ -445,57 +511,65 @@ const home = page({
       },
     ],
   }),
-  body: `<section class="hero">
+  body: `<section class="den-hero">
   <div class="wrap">
-    <p class="kicker">${homeKicker}</p>
-    <h1>${esc(config.siteName)}</h1>
-    <p class="lede">${esc(config.tagline)}</p>
-    <div class="actions">
-      <a class="btn" href="${href('/mods/')}">Browse mods</a>
-      <a class="btn btn-ghost" href="${href('/solclient/')}">See SolClient</a>
-      ${discordUrl ? `<a class="btn btn-discord" href="${esc(discordUrl)}" rel="noopener">Join the Discord</a>` : ''}
+    <div>
+      ${den.hi ? `<p class="hi">${esc(den.hi)}</p>` : ''}
+      <h1>${esc(den.headline || 'I break games.')}${den.headline2 ? `<span class="then">${esc(den.headline2)}</span>` : ''}</h1>
+      <p class="lede">${esc(homeIntro)}</p>
+      ${stickerHtml ? `<div class="stickers">${stickerHtml}</div>` : ''}
+      <div class="actions">
+        <a class="btn" href="${href('/mods/')}">Browse mods</a>
+        <a class="btn btn-ghost" href="${href('/solclient/')}">See SolClient</a>
+        ${discordUrl ? `<a class="btn btn-discord" href="${esc(discordUrl)}" rel="noopener">Join the Discord</a>` : ''}
+      </div>
     </div>
+    ${pinHtml ? `<div class="pins">${pinHtml}</div>` : ''}
   </div>
 </section>
-<section class="wrap">
-  <div class="grid three">
-    ${homeTiles.join('\n    ')}
-  </div>
-</section>
+${nowItems.length ? `<section class="wrap section">
+  <h2 class="rule-title">Now working on</h2>
+  <ul class="now-list">${nowItems.join('')}</ul>
+</section>` : ''}
+${madeItems.length ? `<section class="wrap section">
+  <h2 class="rule-title">Stuff I've made <a href="${href('/mods/')}">all mods →</a></h2>
+  <ul class="made">${madeItems.join('')}</ul>
+</section>` : ''}
 <section class="wrap section">
-  <div class="feature static sol-feature">
+  <div class="feature sol-feature">
     <div class="sol-feature-text">
-      <p class="eyebrow">Featured project · ${esc(sol.status)}${solVersion ? ` · v${esc(solVersion)}` : ''}</p>
+      <p class="eyebrow">the big one · ${esc(sol.status)}${solVersion ? ` · v${esc(solVersion)}` : ''}</p>
       <h2>${esc(sol.name)} for Furcadia</h2>
       <p>${esc(sol.tagline)}</p>
-      ${latestSol ? `<p class="latest-update"><span class="pill">New in v${esc(latestSol.version)}</span> ${esc(changeHeadline(latestSol.items[0]))}${latestSol.items.length > 1 ? `, and ${latestSol.items.length - 1} more` : ''}. <a href="${href('/solclient/#updates')}">What's new →</a></p>` : ''}
+      ${latestSol ? `<p class="latest-update"><span class="pill">new in v${esc(latestSol.version)}</span> ${esc(changeHeadline(latestSol.items[0]))}${latestSol.items.length > 1 ? `, and ${latestSol.items.length - 1} more` : ''}. <a href="${href('/solclient/#updates')}">What's new →</a></p>` : ''}
       <div class="actions">
         <a class="btn" href="${href('/solclient/')}">Learn more</a>
-        <a class="btn btn-ghost" href="${href('/solclient/screenshots/')}">See all ${solShots.shots.length} screenshots</a>
+        <a class="btn btn-ghost" href="${href('/solclient/screenshots/')}">All ${solShots.shots.length} screenshots</a>
       </div>
     </div>
     <div class="sol-feature-shots">${homeShots.map((i) => `<a href="${href(`/solclient/screenshots/#shot-${String(i + 1).padStart(2, '0')}`)}"><img src="${href(solShots.dir + solShots.shots[i].thumb)}" alt="${esc(solShots.shots[i].title)}" width="640" height="360" loading="lazy"></a>`).join('')}</div>
   </div>
 </section>
 ${medium.items.length ? `<section class="wrap section">
-  <div class="section-head"><h2>Latest articles</h2><a href="${href('/writing/')}">All articles →</a></div>
+  <h2 class="rule-title">Latest articles <a href="${href('/writing/')}">all articles →</a></h2>
   <div class="grid three">${medium.items.slice(0, 3).map(articleCard).join('')}</div>
 </section>` : ''}
-${releases.length ? `<section class="wrap section">
-  <div class="section-head"><h2>Latest mods</h2><a href="${href('/mods/')}">All mods →</a></div>
-  <div class="grid three">${releases.slice(0, 3).map(modCard).join('')}</div>
+${videoHtml.length ? `<section class="wrap section">
+  <h2 class="rule-title">On my YouTube ${youtubeUrl ? `<a href="${esc(youtubeUrl)}" rel="noopener">channel →</a>` : ''}</h2>
+  <div class="videos">${videoHtml.join('')}</div>
+  ${twitchUrl ? `<p class="meta" style="margin-top:22px">I stream on <a href="${esc(twitchUrl)}" rel="noopener">Twitch</a> too, when I'm not breaking something.</p>` : ''}
 </section>` : ''}
 ${!hasBooks || !hasArticles ? `<section class="wrap section">
-  <p class="meta coming">Coming later: ${[!hasBooks && 'books', !hasArticles && 'articles'].filter(Boolean).join(' and ')} written as ${esc(config.penName || config.siteName)}${!hasArticles && mediumProfile ? `. <a href="${esc(mediumProfile)}" rel="noopener">Follow on Medium →</a>` : '.'}</p>
+  <p class="coming">Coming later: ${[!hasBooks && 'books', !hasArticles && 'articles'].filter(Boolean).join(' and ')}, written as ${esc(config.penName || config.siteName)}${!hasArticles && mediumProfile ? `. <a href="${esc(mediumProfile)}" rel="noopener">Follow on Medium →</a>` : '.'}</p>
 </section>` : ''}
-${newsletter || discordBand('Come hang out', 'Mod help, SolClient previews and test builds, and people who play the same games. Everyone is welcome.')}`,
+${newsletter || discordBand('Come hang out!', 'Mod help, SolClient previews and test builds, and people who play the same games. Everyone is welcome.')}`,
 });
 
 const modsPage = page({
   slug: '/mods/',
   title: 'Free game mods, modding tools and fixes',
   description: `Free mods, modding tools and compatibility fixes from ${config.siteName}${releases.length ? `: ${releases.map((r) => r.name).join(', ')}` : ''}${setups.length ? `, plus full modded setups for ${setups.map((s) => s.game).join(', ')}` : ''}.`,
-  body: `<section class="page-head wrap"><h1>Mods</h1><p class="lede">Releases, patches and compatibility fixes. Downloads are hosted on the mod sites linked from each one.</p></section>
+  body: `<section class="page-head wrap"><p class="kicker">free, always</p><h1>Mods and tools</h1><p class="lede">Everything I've released, plus the setups I actually play. Downloads live on GitHub and the mod sites, linked from each one.</p></section>
 <section class="wrap section">
   <h2>Releases and tools</h2>
   ${releases.length ? `<div class="grid three">${releases.map(modCard).join('')}</div>` : empty('First releases coming soon.')}
@@ -503,7 +577,7 @@ const modsPage = page({
 </section>
 ${setups.length ? `<section class="wrap section">
   <h2>My setups</h2>
-  <p class="meta">Full modded setups I play, with credit to the collections they're built on, what I changed, and the fixes it took.</p>
+  <p class="meta">The full modded setups I play, with credit to the collections they're built on, what I changed, and what it took to make them run.</p>
   <div class="grid three">${setups.map(setupCard).join('')}</div>
 </section>` : ''}
 ${games.length ? `<section class="wrap section">
@@ -727,7 +801,7 @@ ${support.promises?.length ? `<section class="wrap section prose">
 const notFound = page({
   slug: '/404.html',
   title: 'Not found',
-  body: `<section class="page-head wrap"><h1>Page not found</h1><p class="lede">That page doesn't exist.</p><div class="actions"><a class="btn" href="${href('/')}">Go home</a></div></section>`,
+  body: `<section class="page-head wrap"><p class="kicker">error 404</p><h1>Nothing here.</h1><p class="lede">I probably moved it. Or broke it. That happens a lot around here.</p><div class="actions"><a class="btn" href="${href('/')}">Back to the start</a></div></section>`,
 });
 
 // ---------- write ----------
@@ -737,6 +811,10 @@ await cp(path.join(root, 'static'), out, { recursive: true, filter: (src) => pat
 
 const pages = { 'index.html': home, 'mods/index.html': modsPage, 'solclient/index.html': solPage, 'solclient/screenshots/index.html': shotsPage, 'books/index.html': booksPage, 'writing/index.html': writingPage, 'links/index.html': linksPage, 'about/index.html': aboutPage, ...(hasSupport ? { 'support/index.html': supportPage } : {}), '404.html': notFound };
 for (const s of setups) pages[`mods/${s.slug}/index.html`] = setupPage(s);
+if (youtube.thumbs) {
+  await mkdir(path.join(out, 'img/yt'), { recursive: true });
+  for (const [id, buf] of Object.entries(youtube.thumbs)) await writeFile(path.join(out, 'img/yt', `${id}.jpg`), buf);
+}
 for (const [file, html] of Object.entries(pages)) {
   await mkdir(path.dirname(path.join(out, file)), { recursive: true });
   await writeFile(path.join(out, file), html);

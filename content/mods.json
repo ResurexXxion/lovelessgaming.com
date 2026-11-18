@@ -5,19 +5,34 @@
       "game": "KCD2 · Kenshi · Mass Effect LE",
       "summary": "Live log consoles for heavily modded games: follow the logs as you play, check your load order before launch, and get a plain-English post-mortem when the game crashes. Read-only and free (MIT).",
       "version": "1.1",
-      "updated": "2026-11-15",
+      "updated": "2026-11-17",
       "links": [
-        { "label": "Download on GitHub", "url": "https://github.com/ResurexXxion/loveless-mod-consoles" }
+        {
+          "label": "Download v1.1",
+          "url": "https://github.com/ResurexXxion/loveless-mod-consoles/releases/latest"
+        },
+        {
+          "label": "Source on GitHub",
+          "url": "https://github.com/ResurexXxion/loveless-mod-consoles"
+        }
       ]
     },
     {
       "name": "Loveless Mod Fixes",
       "game": "KCD2 (more games coming)",
       "summary": "Configs, key layouts and fixes from my modded setups: a tuned KCD2 user.cfg, a key scheme that ends the F-key clashes, and quick fixes for disabled or missing mods.",
-      "updated": "2026-11-15",
+      "updated": "2026-11-17",
       "links": [
-        { "label": "Get the fixes on GitHub", "url": "https://github.com/ResurexXxion/loveless-mod-fixes" }
-      ]
+        {
+          "label": "Download v1.0",
+          "url": "https://github.com/ResurexXxion/loveless-mod-fixes/releases/latest"
+        },
+        {
+          "label": "Source on GitHub",
+          "url": "https://github.com/ResurexXxion/loveless-mod-fixes"
+        }
+      ],
+      "version": "1.0"
     }
   ],
   "games": [

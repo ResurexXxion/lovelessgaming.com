@@ -5,7 +5,7 @@
   "tagline": "A modern add-on for the official Furcadia desktop client: better chat, whispers, friends and dream tools, plus a full DragonSpeak studio.",
   "intro": [
     "SolClient works the way Furnarchy did, as a proxy that the official Furcadia client connects through, so it can add features to every line of game traffic. Unlike Furnarchy it never injects anything into Furcadia.exe, so client updates don't break it and antivirus has nothing to flag.",
-    "It's being built in the open with the Furcadia community. Testing, feedback and release news happen in the Discord."
+    "I'm building it in the open with the Furcadia community. Testing, feedback and release news all happen in the Discord."
   ],
   "groups": [
     {

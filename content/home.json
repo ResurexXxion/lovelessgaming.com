@@ -1,0 +1,22 @@
+{
+  "_help": "The personal bits on the home page. Edit freely. {solVersion} becomes SolClient's newest version from its changelog. Pins: 2 photos, 960x600 JPEGs in static/img/den/ (make them with work/gallery/crop.ps1). Now-list status: wip, testing, next or done; 'label' overrides the text shown.",
+  "hi": "hey, welcome in ♥",
+  "headline": "I break games.",
+  "headline2": "Then I fix them.",
+  "intro": "I play heavily modded games, and when they fall over I build the tools to put them back together. Right now that's mostly SolClient, an add-on for Furcadia, plus mod tools for Kingdom Come: Deliverance II. Everything here is free.",
+  "stickers": [
+    { "text": "130+ mods in my KCD2 right now", "url": "/mods/kcd2/" },
+    { "text": "SolClient v{solVersion}", "url": "/solclient/#updates", "color": "pink" },
+    { "text": "no paywalls, ever", "url": "/support/", "color": "mint" }
+  ],
+  "pins": [
+    { "img": "/img/den/kcd2-courtyard.jpg", "caption": "my KCD2, 130+ mods deep", "url": "/mods/kcd2/", "alt": "A castle courtyard in my modded Kingdom Come: Deliverance II, at dusk" },
+    { "img": "/img/den/solclient-map.jpg", "caption": "SolClient's map editor", "url": "/solclient/screenshots/#shot-18", "alt": "SolClient's map editor showing a Furcadia dream drawn with its real art" }
+  ],
+  "now": [
+    { "what": "SolClient", "url": "/solclient/", "status": "wip", "label": "in development", "auto": "solclient" },
+    { "what": "KCD2 merge builder", "url": "https://github.com/ResurexXxion/loveless-mod-fixes/tree/main/kcd2/merge-builder", "status": "testing", "note": "Merges the files that several mods all change, so they stop overwriting each other. It works on my full setup; in-game testing is next." },
+    { "what": "Mod fixes for more games", "url": "https://github.com/ResurexXxion/loveless-mod-fixes", "status": "next", "note": "Kenshi, Terraria and The Sims 3 are next in line for Loveless Mod Fixes." },
+    { "what": "My first book", "status": "wip", "label": "writing", "note": "Under the pen name Mordren Illantru. More when it's closer." }
+  ]
+}

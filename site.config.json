@@ -1,7 +1,9 @@
 {
   "siteName": "Loveless Gaming",
   "domain": "lovelessgaming.com",
-  "tagline": "Free game mods, modding tools and SolClient for Furcadia. Everything I make, all in one place.",
+  "tagline": "I break games, then I fix them. Free mods, modding tools and SolClient for Furcadia.",
+  "signOff": "thanks for stopping by ♥",
+  "youtubeChannelId": "UCzRaE0KOdyyj_Ae0k4VbzRA",
   "homeTitle": "Loveless Gaming: free game mods, modding tools and SolClient for Furcadia",
   "description": "Free game mods, modding tools and fixes from Loveless Gaming, plus SolClient, a modern add-on for the Furcadia client.",
   "author": "",
@@ -12,8 +14,11 @@
   "mediumProfile": "https://medium.com/@Mordren_Illantru",
   "newsletterUrl": "",
   "about": [
-    "Loveless Gaming is my home base on the web. My game mods, modding tools and SolClient for Furcadia all start here, so you don't have to chase them across Nexus, GitHub and Discord.",
-    "Mods are hosted where the modding community already lives, and the tools and source code are on GitHub. Books (for Amazon) and articles (on Medium) are on the way, written under the pen name Mordren Illantru. This site links to all of it and stays up to date."
+    "Hey. I'm the person behind Loveless Gaming, or ResurexXxion on most of the internet.",
+    "I play heavily modded games, and I mean heavily: my Kingdom Come: Deliverance II has over 130 mods in it right now. Most of what's on this site started with me fixing my own setup and figuring someone else probably had the same problem. So the consoles, the fixes and the merge builder are all things I built for myself first.",
+    "These days most of my time goes into SolClient, an add-on for Furcadia, where I also build dreams. I stream on Twitch and post on YouTube now and then, usually something heavily modded or a long haul in American Truck Simulator.",
+    "I write too, under the pen name Mordren Illantru. Books and articles are on the way.",
+    "Everything I make is free. If you want to say hi, report a bug or ask about a mod, the Discord is the best place to find me."
   ],
   "support": {
     "intro": "Everything I make is free: SolClient, the mod tools and fixes, the setups and guides. If it's saved you time or made your game better and you'd like to chip in, it goes straight back into building more of it. Thank you!",
